@@ -7,6 +7,51 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/water.css@2/out/water.css">
   </head>
   <body style="font-size: 20px;">
+    <style type="text/css">
+:root {
+  --total-slides: 3;
+}
+
+[name=slider-group] {
+  display: none;
+}
+.slider_container {
+  overflow-x: hidden;
+}
+.slider {
+  width: calc(var(--total-slides)*800px);
+  font-size: 0;
+  transition: transform 600ms ease-in-out;
+}
+.slider_slide {
+  width: 800px;
+  height: 360px;
+  display: inline-block;
+}
+#radio1:checked~.slider {
+  transform: translateX(0px);
+}
+#radio2:checked~.slider {
+  transform: translateX(-800px);
+}
+#radio3:checked~.slider {
+  transform: translateX(-1600px);
+}
+.slider_nav {
+  margin-top: 1rem;
+  text-align: center;
+}
+.slider_nav .btn {
+  background-color: var(--button-base);
+  border-radius: 2rem;
+  border: none;
+  color: white;
+  padding: 16px;
+  margin: 0 1rem;
+  display: inline-block;
+  cursor: pointer;
+}
+</style>
     <p>
       <img src="https://ycanta.canaanf.org/icon.png" style="float:left; margin-right: 1rem;">
       <br>
@@ -16,7 +61,27 @@
     <br>
     <p>A free intuitive song manager with type-to-search presentation mode and PDF export for text and chords.</p>
     <br>
-    <img src="Screenshot Presenting All Songs.png" style="box-shadow: -2px 2px 20px var(--border); border-radius: 1.2rem; border-bottom-left-radius: 0;">
+    <div class="slider_container" style="box-shadow: -2px 2px 20px var(--border); border-radius: 1.2rem; border-bottom-left-radius: 0;">
+      <input type="radio" name="slider-group" id="radio1" />
+      <input type="radio" name="slider-group" id="radio2" />
+      <input type="radio" name="slider-group" id="radio3" />
+      <div class="slider">
+        <div class="slider_slide">
+          <img src="Screenshot View and Export.png">
+        </div>
+        <div class="slider_slide">
+          <img src="Screenshot Presenting All Songs.png">
+        </div>
+        <div class="slider_slide">
+          <img src="Screenshot mobile.png">
+        </div>
+      </div>
+    </div>
+    <nav class="slider_nav">
+      <label class="btn" for="radio1"></label>
+      <label class="btn" for="radio2"></label>
+      <label class="btn" for="radio3"></label>
+    </nav>
     <br>
     <br>
     <br>
