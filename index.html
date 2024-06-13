@@ -10,6 +10,7 @@
     <style type="text/css">
 :root {
   --total-slides: 3;
+  --slide-width: min(800px, 98vw);
 }
 
 [name=slider-group] {
@@ -19,23 +20,23 @@
   overflow-x: hidden;
 }
 .slider {
-  width: calc(var(--total-slides)*800px);
+  width: calc(var(--total-slides) * var(--slide-width));
   font-size: 0;
   transition: transform 600ms ease-in-out;
 }
 .slider_slide {
-  width: 800px;
-  height: 360px;
+  width: var(--slide-width);
+  height: min(360px, 44vw);
   display: inline-block;
 }
 #radio1:checked~.slider {
   transform: translateX(0px);
 }
 #radio2:checked~.slider {
-  transform: translateX(-800px);
+  transform: translateX(calc(var(--slide-width) * -1));
 }
 #radio3:checked~.slider {
-  transform: translateX(-1600px);
+  transform: translateX(calc(var(--slide-width) * -2));
 }
 .slider_nav {
   margin-top: 1rem;
@@ -47,17 +48,17 @@
   border: none;
   color: var(--form-text);
   padding: 8px 16px;
-  margin: 0 1rem;
+  margin: 0 1rem 1rem 1rem;
   display: inline-block;
   cursor: pointer;
 }
 </style>
     <p>
-      <img src="https://ycanta.canaanf.org/icon.png" style="float:left; margin-right: 1rem;">
+      <img src="https://ycanta.canaanf.org/icon.png" style="float:left; margin-right: 1rem; max-width: 47vw;">
       <br>
     </p>
-    <h1 style="line-height: 5rem;">y·Can·ta</h1>
-    <p><b>/ and sing! /</b></p> 
+    <h1 style="margin-top: .8em; font-size: min(2.2em, 10vw)">y·Can·ta</h1>
+    <p style="font-size: min(5vw, 1em);"><b>/ and sing! /</b></p> 
     <br>
     <p>A free intuitive song manager with type-to-search presentation mode and PDF export for text and chords.</p>
     <br>
@@ -82,7 +83,6 @@
       <label class="btn" for="radio2">Presentation</label>
       <label class="btn" for="radio3">Mobile</label>
     </nav>
-    <br>
     <br>
     <br>
     <button onclick="window.open('https://demo.yCanta.com','_blank')">Try Demo</button>
