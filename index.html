@@ -43,16 +43,6 @@
   margin-top: 1rem;
   text-align: center;
 }
-.slider_nav .btn {
-  background-color: var(--button-base);
-  border-radius: 6px;
-  border: none;
-  color: var(--form-text);
-  padding: 8px 16px;
-  margin: 0 1rem 1rem 1rem;
-  display: inline-block;
-  cursor: pointer;
-}
 </style>
     <button onclick="window.open('https://login.yCanta.com','_blank')" style="float:right;">Login</button>
     <p>
@@ -62,7 +52,7 @@
     <h1 style="margin-top: .8em; font-size: min(2.2em, 10vw)">y·Can·ta</h1>
     <p style="font-size: min(5vw, 1em);"><b>/ and sing! /</b></p> 
     <br>
-    <p>A free intuitive song manager with type-to-search presentation mode and PDF export for text and chords.</p>
+    <p>A free intuitive song manager with type-to-search presentation mode and PDF export for text and chords - designed to quickly create, manage, present, and export both songs and songbooks offline or online on any browser or device.</p>
     <br>
     <div class="slider_container" style="box-shadow: -2px 2px 20px var(--border); border-radius: 1.2rem; border-bottom-left-radius: 0;">
       <input type="radio" name="slider-group" id="radio1" />
@@ -81,26 +71,26 @@
       </div>
     </div>
     <nav class="slider_nav">
-      <label class="btn" for="radio1">Desktop</label>
-      <label class="btn" for="radio2">Presentation</label>
-      <label class="btn" for="radio3">Mobile</label>
+      <button><label for="radio1">Desktop</label></button>
+      <button><label for="radio2">Presentation</label></button>
+      <button><label for="radio3">Mobile</label></button>
     </nav>
     <br>
-    <br>
-    <button onclick="window.open('https://demo.yCanta.com','_blank')">Try Demo</button>
-    <br>
-    <br>
+    <div style="background: linear-gradient(rgba(0, 0, 0, 0.1), rgba(173, 216, 230, 0.4)); padding: 0.1rem 1rem 1rem 1rem; border-radius: 1rem;">
+      <h2>Demo</h2>
+      <p>You can try yCanta as a local copy with a prepopulated set of public domain songs below.</p>
+      <button onclick="window.open('https://demo.yCanta.com','_blank')">Try Demo</button>
+    </div>
     <br>
     <h2>More Information</h2>
-    <p>A song manager designed to quickly create, manage, present, and export both songs and songbooks for Christian worship offline or online on any browser or device.</p>  
-    Built as a:
+    <p>A song manager built as a:</p>  
+    
     <ul>
       <li>Offline capable <a href="https://developer.mozilla.org/en-US/docs/Web/Progressive_web_apps">PWA</a></li>
       <li>Built on <a href="https://pouchdb.com/">PouchDb</a>/<a href="https://couchdb.apache.org/">CouchDb</a></li>
       <li>Using <a href="https://github.com/foliojs/pdfkit/releases/tag/v0.10.0" >pdfKit </a></li>
     </ul>
     Dev site: <a href="https://github.com/yCanta/yCanta2">https://github.com/yCanta/yCanta2</a>
-    <br>
     <br>
     <br>
     <button onclick="window.open(`mailto:${'info.ycanta'}@${'gmail.com'}?subject=Requesting yCanta access&body= `,'_blank')">Contact us!</button>
