@@ -42,6 +42,12 @@
 .slider_nav {
   margin-top: 1rem;
   text-align: center;
+  font-size: min(1.25rem, 4vw);
+}
+.slider_nav button {
+  padding-left: min(30px, 3vw);
+  padding-right: min(30px, 3vw);
+  border-radius: 4rem;
 }
 </style>
     <button onclick="window.open('https://login.yCanta.com','_blank')" style="float:right;">Login</button>
@@ -52,7 +58,7 @@
     <h1 style="margin-top: .8em; font-size: min(2.2em, 10vw)">y·Can·ta</h1>
     <p style="font-size: min(5vw, 1em);"><b>/ and sing! /</b></p> 
     <br>
-    <p>A free intuitive song manager with type-to-search presentation mode and PDF export for text and chords - designed to quickly create, manage, present, and export both songs and songbooks offline or online on any browser or device.</p>
+    <p>A free web-based intuitive song manager for churches and families with type-to-search presentation mode and PDF export for text and chords.  It is designed to quickly create, manage, present, and export both songs and songbooks offline or online on any browser or device.</p>
     <br>
     <div class="slider_container" style="box-shadow: -2px 2px 20px var(--border); border-radius: 1.2rem; border-bottom-left-radius: 0;">
       <input type="radio" name="slider-group" id="radio1" />
@@ -78,24 +84,28 @@
     <br>
     <div style="background: linear-gradient(rgba(0, 0, 0, 0.1), rgba(173, 216, 230, 0.4)); padding: 0.1rem 1rem 1rem 1rem; border-radius: 1rem;">
       <h2>Demo</h2>
-      <p>You can try yCanta as a local copy with a prepopulated set of public domain songs below.</p>
+      <p>Try yCanta as a local copy with a prepopulated set of public domain songs!</p>
       <button onclick="window.open('https://demo.yCanta.com','_blank')">Try Demo</button>
     </div>
     <br>
-    <h2>More Information</h2>
-    <p>A song manager built as a:</p>  
-    
+    <h2>yCanta's History</h2>
+    <p>yCanta was born from a desire to allow improved participation in singing of contemporary songs at <a href="https://canaanf.org">Canaan Fellowship</a>.  My brother and I built the first version of yCanta back in 2006 to make it easier to print a supplemental book with contemporary songs to be used alongside our hymnal.  As we worked towards that, our church moved to projecting songs instead of working primarily from songbooks.</p>
+    <p>Canaan Fellowship places a high value on everyone in the church participating in the way that 1 Corinthians 14:26 says: <i>"When you come together, each one has a hymn, a lesson, a revelation, a tongue, or an interpretation."</i>  For this reason we built yCanta to allow quick search and presentation of songs as they are requested by congregants.</p>
+    <p>Version 2.0 was built to be mobile-friendly; and as I've been raising my kids I wanted easy access to the songs we sing together as a family.</p>
+    <br>
+    <div style="background: linear-gradient(rgba(0, 0, 0, 0.1), rgba(242, 194, 73, 0.4)); padding: 0.1rem 1rem 1rem 1rem; border-radius: 1rem;">
+      <h2>Contact us</h2>
+      <p>Want to use it for your church or group? Questions? Comments? I love to get feedback!</p>
+      <button onclick="window.open(`mailto:${'info.ycanta'}@${'gmail.com'}?subject=Requesting yCanta access&body= `,'_blank')">Email us!</button>
+    </div>
+    <br>
+    <p>Some technical details:</p>  
     <ul>
       <li>Offline capable <a href="https://developer.mozilla.org/en-US/docs/Web/Progressive_web_apps">PWA</a></li>
       <li>Built on <a href="https://pouchdb.com/">PouchDb</a>/<a href="https://couchdb.apache.org/">CouchDb</a></li>
-      <li>Using <a href="https://github.com/foliojs/pdfkit/releases/tag/v0.10.0" >pdfKit </a></li>
+      <li>Using <a href="https://github.com/foliojs/pdfkit/releases/tag/v0.10.0" >pdfKit</a></li>
     </ul>
     Dev site: <a href="https://github.com/yCanta/yCanta2">https://github.com/yCanta/yCanta2</a>
-    <br>
-    <br>
-    <button onclick="window.open(`mailto:${'info.ycanta'}@${'gmail.com'}?subject=Requesting yCanta access&body= `,'_blank')">Contact us!</button>
-    <br>
-    <br>
     <br>
     <br>
     <br>
