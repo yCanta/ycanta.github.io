@@ -49,14 +49,164 @@
   padding-right: min(30px, 3vw);
   border-radius: 4rem;
 }
+
+/*ICON STYLING*/
+.icon *, .icon *:after, .icon *:before {
+  box-sizing: border-box;
+  transition: all .4s linear;
+  opacity: 1;
+}
+.icon {
+  aspect-ratio: 1 / 1;
+  font-size: 8px;
+}
+.icon:hover .ltr {
+  --stroke-width: .15em;
+  --middle-offset: 0em;
+  margin: 1em 0.05em;
+}
+.ltr {
+  --stroke-width: .5em;
+  --color: lightblue;
+  --secondary-color: cornflowerblue;
+  --border-adjust: calc(-1 * var(--stroke-width));
+  --middle-offset: .25em;
+  display: inline-block;
+  width: 1em;
+  height: calc(1em + var(--middle-offset));
+  margin: 1em 0.1em;
+  position: relative;
+  font-size: 3em;
+}
+.y {
+  border: var(--stroke-width) solid var(--color);
+  border-top: none;
+  border-bottom-left-radius: 50%;
+  border-bottom-right-radius: 50%;
+}
+.y:after {
+  position: absolute;
+  top: 0em;
+  left: var(--border-adjust);
+  width: 1em;
+  height: calc(2em + var(--middle-offset));
+  content: ' ';
+  border-right: var(--stroke-width) solid var(--secondary-color);
+  border-bottom: var(--stroke-width) solid var(--secondary-color);
+  border-bottom-right-radius: 80% 50%;
+}
+.C::before {
+  border: var(--stroke-width) solid var(--color);
+  border-right: none;
+  position: absolute;
+  top: calc(-1em + var(--middle-offset));
+  left: 0;
+  width: 1em;
+  height: 2em;
+  content: ' ';
+  border-top-left-radius: 70% 45%;
+  border-bottom-left-radius: 70% 45%;
+  border-bottom-color: var(--secondary-color);
+}
+.a {
+  border: var(--stroke-width) solid var(--color);
+  border-radius: 50%;
+}
+.a:after {
+  border-right: var(--stroke-width) solid var(--secondary-color);
+  position: absolute;
+  top: calc(var(--border-adjust) + .5em);
+  left: var(--border-adjust);
+  width: 1em;
+  height: calc(.5em + var(--middle-offset));
+  content: ' ';
+}
+.n {
+  border: var(--stroke-width) solid var(--secondary-color);
+  border-bottom: 0;
+  border-top-right-radius: 50%;
+  border-top-left-radius: 50%;
+}
+.n:before {
+  border-left: var(--stroke-width) solid var(--color);
+  position: absolute;
+  top: calc(var(--border-adjust));
+  left: var(--border-adjust);
+  width: 1em;
+  height: calc(1em + var(--middle-offset));
+  content: ' ';
+}
+.t {
+  margin: 1em 0;
+}
+.t:before {
+  border-left: var(--stroke-width) solid var(--color);
+  position: absolute;
+  top: calc(-1em + var(--middle-offset));
+  left: calc(.5em - var(--stroke-width)/2);
+  width: 1em;
+  height: 2em;
+  content: ' ';
+}
+.t:after {
+  border-top: var(--stroke-width) solid var(--secondary-color);
+  position: absolute;
+  top: calc(var(--border-adjust)/2);
+  width: 1em;
+  height: 1em;
+  content: ' ';
+}
+.icon {
+  position: relative;
+  width: 25em;
+  height: 25em;
+  border-radius: 5em;
+  background: var(--background);
+  display: flex; /* Make the icon a flex container */
+  justify-content: center; /* Center horizontally */
+  align-items: center; /* Center vertically */
+}
+.note {
+  position: absolute;
+  top: -.5em;
+  width: 2em;
+  height: 2em;
+  border: var(--stroke-width) solid var(--color);
+  border-bottom: none;
+  transform: skewY(-10deg) scale(.5);
+  right: 2.5em; 
+}
+.note:before {
+  position: absolute;
+  right: 100%;
+  bottom: -.5em;
+  width: 1em;
+  height: 1em;
+  border: var(--stroke-width) solid var(--secondary-color);
+  border-radius: 100%;
+  content: ' ';
+}
+.note:after {
+  position: absolute;
+  left: calc(100% - 1em + var(--stroke-width));
+  bottom: -.5em;
+  width: 1em;
+  height: 1em;
+  border: var(--stroke-width) solid var(--secondary-color);
+  border-radius: 100%;
+  content: ' ';
+}
 </style>
     <a href="https://login.yCanta.com" target="_blank" style="float:right; line-height: 2.9rem; margin-left:1rem">Login</a>
     <button onclick="window.open('https://demo.yCanta.com','_blank')" style="float:right;">Demo</button>
     <!--a href="https://login.yCanta.com" target="_blank" style="float:right; line-height: 2.9rem; margin-right:1rem">Documentation</a-->
-    <p>
-      <img src="https://ycanta.canaanf.org/icon.png" style="float:left; margin-right: 1rem; max-width: 47vw;">
-      <br>
-    </p>
+    <div class="icon" style="float:left; margin-right: 2rem;">
+      <span class="ltr note">
+      </span>
+      <span class="word"><span class="ltr y"></span><span class="ltr C"></span><span class="ltr a"></span><span class="ltr n"></span><span class="ltr t"></span><span class="ltr a"></span></span>
+      <span class="ltr note" style="top:unset; bottom: 0em; right: unset; left: 2em;">
+    </div>
+    <br>
     <h1 style="margin-top: .8em; font-size: min(2.2em, 10vw)">y·Can·ta</h1>
     <p style="font-size: min(5vw, 1em);"><b>/ and sing! /</b></p> 
     <br>
