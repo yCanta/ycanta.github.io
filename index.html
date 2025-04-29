@@ -282,16 +282,18 @@ header {
 <script>
   document.addEventListener('DOMContentLoaded', () => {
     const trackElement = document.getElementById('observer');
-    const header = document.querySelector('header');
+    let startingY = trackElement.getBoundingClientRect().bottom;
+    let lastScrollValue = 0;
     
     function updateScrollPosition() {
-      const rect = trackElement.getBoundingClientRect();
-      // Distance from bottom of viewport (viewport height minus element bottom position)
-      const distanceFromBottom = Math.max(0, rect.bottom);
-      if(window.startingY == null) {
-        window.startingY = distanceFromBottom;
+      const currentBottom = trackElement.getBoundingClientRect().bottom;
+      const scrollValue = Math.floor(Math.max(0, startingY - currentBottom));
+      
+      // Only update if change is >1px to prevent micro-updates
+      if (Math.abs(scrollValue - lastScrollValue) > 0.5) {
+        document.documentElement.style.setProperty('--scroll-y-no', scrollValue);
+        lastScrollValue = scrollValue;
       }
-      document.documentElement.style.setProperty('--scroll-y-no', window.startingY - distanceFromBottom);
       requestAnimationFrame(updateScrollPosition);
     }
 
