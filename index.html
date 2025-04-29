@@ -12,6 +12,18 @@
 :root {
   --total-slides: 3;
   --slide-width: min(800px, 98vw);
+  --scroll-y-no: 0;
+  --y-intercept: 0.5em;
+  --lowest-y: 0.15em;
+  --lowest-y-x: 100;
+  --parabola: calc((var(--y-intercept) - var(--lowest-y)) / (var(--lowest-y-x) * var(--lowest-y-x)) * (var(--scroll-y-no) - var(--lowest-y-x)) * (var(--scroll-y-no) - var(--lowest-y-x)) + var(--lowest-y));
+
+/*Linear*/
+  --initial-value: 200;  /* Initial value, e.g., 200px, 200%, 1 */
+  --final-value: 100;    /* Final value, e.g., 100px, 100%, 0 */
+  --scroll-start-change: 3; /* Scroll start position in pixels */
+  --scroll-stop-change: 150;  /* Scroll end position in pixels */
+  --scroll-position: var(--scroll-y-no);    /* Current scroll position; updated by JavaScript */
 }
 
 [name=slider-group] {
@@ -53,20 +65,35 @@
 /*ICON STYLING*/
 .icon *, .icon *:after, .icon *:before {
   box-sizing: border-box;
-  transition: all .4s linear;
-  opacity: 1;
+}
+.icon, #header, #header h1 {
+  --scroll-range: calc(var(--scroll-stop-change) - var(--scroll-start-change));
+  --scroll-percent: calc(
+    clamp(
+      0, /* Ensure the value is not less than 0 */
+      calc(
+        (var(--scroll-position) - var(--scroll-start-change)) / var(--scroll-range)
+      ),
+      1  /* Ensure the value is not greater than 1 */
+    )
+  );
+  --linear-change: calc(
+    var(--initial-value) + (var(--final-value) - var(--initial-value)) * var(--scroll-percent)
+  );
 }
 .icon {
+  --initial-value: 8;
+  --final-value: 2.2;
   aspect-ratio: 1 / 1;
-  font-size: 8px;
+  font-size: calc(var(--linear-change) * 1px);
 }
 .icon:hover .ltr {
+  transition: border-width 1s;
   --stroke-width: .15em;
   --middle-offset: 0em;
-  margin: 1em 0.05em;
 }
 .ltr {
-  --stroke-width: .5em;
+  --stroke-width: min(var(--parabola), 0.5em);
   --color: lightblue;
   --secondary-color: cornflowerblue;
   --border-adjust: calc(-1 * var(--stroke-width));
@@ -77,12 +104,26 @@
   margin: 1em 0.1em;
   position: relative;
   font-size: 3em;
+  @container (max-width: 125px) {
+    --stroke-width: 0;
+    transition: all .5s;
+    width: 0em;
+    margin: 1em 0px;
+    opacity: 0;
+  }
 }
 .y {
   border: var(--stroke-width) solid var(--color);
   border-top: none;
   border-bottom-left-radius: 50%;
   border-bottom-right-radius: 50%;
+  @container (max-width: 125px) {
+    --stroke-width: .5em;
+    font-size: 7em;
+    margin-bottom: 2em;
+    width: 1em;
+    opacity: 1;
+  }
 }
 .y:after {
   position: absolute;
@@ -165,6 +206,7 @@
   display: flex; /* Make the icon a flex container */
   justify-content: center; /* Center horizontally */
   align-items: center; /* Center vertically */
+  container-type: size;
 }
 .note {
   position: absolute;
@@ -196,19 +238,66 @@
   border-radius: 100%;
   content: ' ';
 }
+body {
+  margin-top: 0;
+}
+header {
+  position: sticky;
+  top: 0;
+  height: 12rem; /*var(--linear-change);*/
+}
+#header {
+  padding: 1rem 3rem;
+  margin: 0 -2rem;
+  background-color: var(--background-body);
+  --initial-value: 12rem;
+  --final-value: 4rem;
+}
+#header h1 {
+  --y-intercept: 6rem;
+  --lowest-y: 0.1px;
+  --initial-value: 120;
+  --final-value: 0.1;
+  max-height: calc(var(--linear-change) * 1px);
+  margin-top: calc(var(--linear-change) * .17 * 1px);
+  margin-bottom: calc(var(--linear-change) * .17 * 1px);
+  overflow: hidden;
+}
 </style>
-    <a href="https://login.yCanta.com" target="_blank" style="float:right; line-height: 2.9rem; margin-left:1rem">Login</a>
-    <button onclick="window.open('https://demo.yCanta.com','_blank')" style="float:right;">Demo</button>
-    <!--a href="https://login.yCanta.com" target="_blank" style="float:right; line-height: 2.9rem; margin-right:1rem">Documentation</a-->
-    <div class="icon" style="float:left; margin-right: 2rem;">
-      <span class="ltr note">
-      </span>
-      <span class="word"><span class="ltr y"></span><span class="ltr C"></span><span class="ltr a"></span><span class="ltr n"></span><span class="ltr t"></span><span class="ltr a"></span></span>
-      <span class="ltr note" style="top:unset; bottom: 0em; right: unset; left: 2em;">
-    </div>
-    <br>
-    <h1 style="margin-top: .8em; font-size: min(2.2em, 10vw)">y·Can·ta</h1>
-    <p style="font-size: min(5vw, 1em);"><b>/ and sing! /</b></p> 
+<script>
+  function debounce(func, delay) {
+    let timeoutId;
+    return function(...args) {
+      clearTimeout(timeoutId);
+      timeoutId = setTimeout(() => {
+        func.apply(this, args);
+      }, delay);
+    };
+  }
+
+  const handleScroll = () => {
+    const scrollPosition = window.scrollY;
+    document.documentElement.style.setProperty('--scroll-y-no', scrollPosition);
+  };
+
+  window.addEventListener('scroll', debounce(handleScroll, 2)); // Adjust the delay (in milliseconds) as needed
+
+</script>
+    <header>
+      <div id="header">
+        <a href="https://login.yCanta.com" target="_blank" style="float:right; line-height: 2.9rem; margin-left:1rem">Login</a>
+        <button onclick="window.open('https://demo.yCanta.com','_blank')" style="float:right;">Demo</button>
+        <!--a href="https://login.yCanta.com" target="_blank" style="float:right; line-height: 2.9rem; margin-right:1rem">Documentation</a-->
+        <div class="icon transition" style="float:left; margin-right: 2rem;">
+          <span class="ltr note">
+          </span>
+          <span class="word"><span class="ltr y"></span><span class="ltr C"></span><span class="ltr a"></span><span class="ltr n"></span><span class="ltr t"></span><span class="ltr a"></span></span>
+          <span class="ltr note" style="top:unset; bottom: 0em; right: unset; left: 2em;"></span>
+        </div>
+        <h1 style="font-size: min(2.2em, 10vw)">y·Can·ta</h1>
+        <p style="font-size: min(5vw, 1em); margin-top: 0.5em"><b>/ and sing! /</b></p>
+      </div>
+    </header> 
     <br>
     <p>A free web-based intuitive song manager for churches and families with type-to-search presentation mode and PDF export for text and chords.  It is designed to quickly create, manage, present, and export both songs and songbooks offline or online on any browser or device.</p>
     <br>
