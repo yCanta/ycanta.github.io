@@ -22,8 +22,8 @@
 /*Linear*/
   --initial-value: 200;  /* Initial value, e.g., 200px, 200%, 1 */
   --final-value: 100;    /* Final value, e.g., 100px, 100%, 0 */
-  --scroll-start-change: 3; /* Scroll start position in pixels */
-  --scroll-stop-change: 150;  /* Scroll end position in pixels */
+  --scroll-start-change: 0; /* Scroll starts at top of viewport */
+  --scroll-stop-change: 300;  /* Scroll end position in pixels */
   --scroll-position: var(--scroll-y-no);    /* Current scroll position; updated by JavaScript */
 }
 
@@ -34,7 +34,6 @@
   overflow-x: hidden;
 }
 .slider {
-  will-change: transform;
   width: calc(var(--total-slides) * var(--slide-width));
   font-size: 0;
   transition: transform 600ms ease-in-out;
@@ -95,7 +94,6 @@
   --middle-offset: 0em;
 }
 .ltr {
-  will-change: border-width, transform;
   --stroke-width: min(var(--parabola), 0.5em);
   --color: lightblue;
   --secondary-color: cornflowerblue;
@@ -201,7 +199,6 @@
   content: ' ';
 }
 .icon {
-  will-change: transform, opacity;
   position: relative;
   width: 25em;
   height: 25em;
@@ -248,10 +245,8 @@ body {
 header {
   position: sticky;
   top: 0;
-  z-index: 1;
 }
 #header {
-  will-change: max-height, margin, opacity, filter;
   padding: 1rem 3rem;
   margin: 0 -2rem;
   background-color: var(--background-body);
@@ -285,40 +280,24 @@ header {
 }
 </style>
 <script>
-  let lastScrollY = 0;
-  let ticking = false;
-
-  function updateScrollPosition() {
-    document.documentElement.style.setProperty('--scroll-y-no', lastScrollY);
-    ticking = false;
-  }
-
-  let scrollTimeout;
-
-  function handleScroll() {
-    lastScrollY = window.scrollY;
+  document.addEventListener('DOMContentLoaded', () => {
+    const trackElement = document.getElementById('observer');
+    const header = document.querySelector('header');
     
-    // Add will-change when scrolling starts
-    document.querySelectorAll('.icon, #header, #header h1, #spacer, .ltr')
-      .forEach(el => el.style.willChange = 'opacity, transform, filter, margin, max-height, border-width');
-    
-    if (!ticking) {
-      window.requestAnimationFrame(updateScrollPosition);
-      ticking = true;
+    function updateScrollPosition() {
+      const rect = trackElement.getBoundingClientRect();
+      // Distance from bottom of viewport (viewport height minus element bottom position)
+      const distanceFromBottom = Math.max(0, rect.bottom);
+      if(window.startingY == null) {
+        window.startingY = distanceFromBottom;
+      }
+      document.documentElement.style.setProperty('--scroll-y-no', window.startingY - distanceFromBottom);
+      requestAnimationFrame(updateScrollPosition);
     }
 
-    // Clear timeout if already set
-    clearTimeout(scrollTimeout);
-    
-    // Remove will-change after scrolling stops
-    scrollTimeout = setTimeout(() => {
-      document.querySelectorAll('.icon, #header, #header h1, #spacer, .ltr')
-        .forEach(el => el.style.willChange = 'auto');
-    }, 100);
-  }
-
-  window.addEventListener('scroll', handleScroll, { passive: true });
-
+    // Start tracking
+    updateScrollPosition();
+  });
 </script>
     <header>
       <div id="header">
@@ -337,9 +316,9 @@ header {
         <h1 style="font-size: min(2.2em, 10vw)">y·Can·ta</h1>
         <p style="font-size: min(4vw, 1em); margin-top: 0.5em"><b>/ and sing! /</b></p>
       </div>
-    </header> 
+    </header>
     <br>
-    <p>A free web-based intuitive song manager for churches and families with type-to-search presentation mode and PDF export for text and chords.  It is designed to quickly create, manage, present, and export both songs and songbooks offline or online on any browser or device.</p>
+    <p id="observer">A free web-based intuitive song manager for churches and families with type-to-search presentation mode and PDF export for text and chords.  It is designed to quickly create, manage, present, and export both songs and songbooks offline or online on any browser or device.</p>
     <br>
     <div class="slider_container" style="box-shadow: -2px 2px 20px var(--border); border-radius: 1.2rem; border-bottom-left-radius: 0;">
       <input type="radio" name="slider-group" id="radio1" />
