@@ -66,7 +66,7 @@
 .icon *, .icon *:after, .icon *:before {
   box-sizing: border-box;
 }
-.icon, #header, #header h1 {
+.icon, #header, #header h1, #spacer {
   --scroll-range: calc(var(--scroll-stop-change) - var(--scroll-start-change));
   --scroll-percent: calc(
     clamp(
@@ -85,7 +85,7 @@
   --initial-value: 8;
   --final-value: 2.2;
   aspect-ratio: 1 / 1;
-  font-size: calc(var(--linear-change) * 1px);
+  font-size: min(calc(var(--linear-change) * 1px), 1.3vw);
 }
 .icon:hover .ltr {
   transition: border-width 1s;
@@ -244,7 +244,6 @@ body {
 header {
   position: sticky;
   top: 0;
-  height: 12rem; /*var(--linear-change);*/
 }
 #header {
   padding: 1rem 3rem;
@@ -262,6 +261,19 @@ header {
   margin-top: calc(var(--linear-change) * .17 * 1px);
   margin-bottom: calc(var(--linear-change) * .17 * 1px);
   overflow: hidden;
+}
+@media (max-width: 600px) {
+  #spacer { 
+    --initial-value: 80;
+    --final-value: 0;
+    height: calc(var(--linear-change) * 1px);
+  }
+  .icon.transition {
+    margin-right: 1rem !important;
+  }
+  #header {
+    padding: 2rem;
+  }
 }
 </style>
 <script>
@@ -285,8 +297,11 @@ header {
 </script>
     <header>
       <div id="header">
-        <a href="https://login.yCanta.com" target="_blank" style="float:right; line-height: 2.9rem; margin-left:1rem">Login</a>
-        <button onclick="window.open('https://demo.yCanta.com','_blank')" style="float:right;">Demo</button>
+        <span id="buttons" style="float:right;">
+          <button onclick="window.open('https://demo.yCanta.com','_blank')">Demo</button>
+          <a href="https://login.yCanta.com" target="_blank" style="line-height: 2.9rem; margin-left:1rem">Login</a>
+        </span>
+        <div id="spacer"></div>
         <!--a href="https://login.yCanta.com" target="_blank" style="float:right; line-height: 2.9rem; margin-right:1rem">Documentation</a-->
         <div class="icon transition" style="float:left; margin-right: 2rem;">
           <span class="ltr note">
@@ -295,7 +310,7 @@ header {
           <span class="ltr note" style="top:unset; bottom: 0em; right: unset; left: 2em;"></span>
         </div>
         <h1 style="font-size: min(2.2em, 10vw)">y·Can·ta</h1>
-        <p style="font-size: min(5vw, 1em); margin-top: 0.5em"><b>/ and sing! /</b></p>
+        <p style="font-size: min(4vw, 1em); margin-top: 0.5em"><b>/ and sing! /</b></p>
       </div>
     </header> 
     <br>
