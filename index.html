@@ -1,7 +1,8 @@
+<!DOCTYPE html>
 <html lang="en">
   <head>
     <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>yCanta</title>
     <meta name="description" content="A free intuitive song manager with type-to-search presenation mode and PDF export for text and chords.">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/water.css@2/out/water.css">
@@ -261,6 +262,8 @@ header {
   margin-top: calc(var(--linear-change) * .17 * 1px);
   margin-bottom: calc(var(--linear-change) * .17 * 1px);
   overflow: hidden;
+  opacity: calc(var(--linear-change) / 110);
+  filter: blur(calc((1 - var(--linear-change) / 110) * 60px));
 }
 @media (max-width: 600px) {
   #spacer { 
