@@ -34,6 +34,7 @@
   overflow-x: hidden;
 }
 .slider {
+  will-change: transform;
   width: calc(var(--total-slides) * var(--slide-width));
   font-size: 0;
   transition: transform 600ms ease-in-out;
@@ -94,6 +95,7 @@
   --middle-offset: 0em;
 }
 .ltr {
+  will-change: border-width, transform;
   --stroke-width: min(var(--parabola), 0.5em);
   --color: lightblue;
   --secondary-color: cornflowerblue;
@@ -199,6 +201,7 @@
   content: ' ';
 }
 .icon {
+  will-change: transform, opacity;
   position: relative;
   width: 25em;
   height: 25em;
@@ -245,8 +248,10 @@ body {
 header {
   position: sticky;
   top: 0;
+  z-index: 1;
 }
 #header {
+  will-change: max-height, margin, opacity, filter;
   padding: 1rem 3rem;
   margin: 0 -2rem;
   background-color: var(--background-body);
@@ -280,22 +285,39 @@ header {
 }
 </style>
 <script>
-  function debounce(func, delay) {
-    let timeoutId;
-    return function(...args) {
-      clearTimeout(timeoutId);
-      timeoutId = setTimeout(() => {
-        func.apply(this, args);
-      }, delay);
-    };
+  let lastScrollY = 0;
+  let ticking = false;
+
+  function updateScrollPosition() {
+    document.documentElement.style.setProperty('--scroll-y-no', lastScrollY);
+    ticking = false;
   }
 
-  const handleScroll = () => {
-    const scrollPosition = window.scrollY;
-    document.documentElement.style.setProperty('--scroll-y-no', scrollPosition);
-  };
+  let scrollTimeout;
 
-  window.addEventListener('scroll', debounce(handleScroll, 2)); // Adjust the delay (in milliseconds) as needed
+  function handleScroll() {
+    lastScrollY = window.scrollY;
+    
+    // Add will-change when scrolling starts
+    document.querySelectorAll('.icon, #header, #header h1, #spacer, .ltr')
+      .forEach(el => el.style.willChange = 'opacity, transform, filter, margin, max-height, border-width');
+    
+    if (!ticking) {
+      window.requestAnimationFrame(updateScrollPosition);
+      ticking = true;
+    }
+
+    // Clear timeout if already set
+    clearTimeout(scrollTimeout);
+    
+    // Remove will-change after scrolling stops
+    scrollTimeout = setTimeout(() => {
+      document.querySelectorAll('.icon, #header, #header h1, #spacer, .ltr')
+        .forEach(el => el.style.willChange = 'auto');
+    }, 100);
+  }
+
+  window.addEventListener('scroll', handleScroll, { passive: true });
 
 </script>
     <header>
