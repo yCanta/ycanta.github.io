@@ -64,6 +64,9 @@
 }
 
 /*ICON STYLING*/
+.icon *, .icon *:after, .icon *:before {
+  box-sizing: border-box;
+}
 .icon, #header, #header h1, #spacer {
   --scroll-range: calc(var(--scroll-stop-change) - var(--scroll-start-change));
   --scroll-percent: calc(
@@ -82,12 +85,13 @@
 .icon {
   --initial-value: 8;
   --final-value: 2.2;
-  --color: lightblue;
-  --secondary-color: cornflowerblue;
-  --stroke-width: min(var(--parabola), 0.5em);
-  --middle-offset: 0.25em;
   aspect-ratio: 1 / 1;
   font-size: min(calc(var(--linear-change) * 1px), 1.3vw);
+}
+.icon {
+  --color: lightblue;
+  --secondary-color: cornflowerblue;
+  --stroke-width: var(--parabola);
   position: relative;
   width: 25em;
   height: 25em;
@@ -97,47 +101,44 @@
   justify-content: center;
   align-items: center;
   container-type: size;
+  overflow: visible;
 }
-
-.icon:hover {
-  --stroke-width: 0.15em;
-  --middle-offset: 0em;
+.icon svg {
+  width: 90%;
+  height: 90%;
+  overflow: visible;
 }
-
-.icon-svg {
-  width: 100%;
-  height: 100%;
+.icon path, .icon g {
+  transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
 }
-
-.ltr-path {
+.icon path {
   fill: none;
-  stroke: var(--color);
-  stroke-width: calc(var(--stroke-width) * 3);
   stroke-linecap: round;
   stroke-linejoin: round;
-  transition: stroke-width 1s, transform 1s, opacity 0.5s;
+  stroke-width: var(--stroke-width);
   vector-effect: non-scaling-stroke;
 }
-
-.secondary { stroke: var(--secondary-color); }
-.fill-secondary { fill: var(--secondary-color); stroke: none; transition: fill 1s; }
-
-/* Dynamic letter adjustments */
-.y-tail, .a-stem, .n-stem, .t-stem, .c-bottom {
-  transform: translateY(calc(var(--middle-offset) * 3));
+.icon:hover path {
+  --stroke-width: 0.15em !important;
 }
-.t-cross {
-  transform: translateY(calc(var(--middle-offset) * -3));
+#svg-char-y, #svg-char-C-top, #svg-char-a-body, #svg-char-n-stem, #svg-char-t-stem, #svg-char-a2-body, .svg-note-stem {
+  stroke: var(--color);
 }
-
-.full-word { opacity: 1; transition: opacity 0.5s; }
-.y-only { opacity: 0; transition: opacity 0.5s; }
+#svg-char-y-tail, #svg-char-C-bottom, #svg-char-a-tail, #svg-char-n-arch, #svg-char-t-cross, #svg-char-a2-tail, .svg-note-head {
+  stroke: var(--secondary-color);
+}
 
 @container (max-width: 125px) {
-  .full-word { opacity: 0; }
-  .y-only {
-    opacity: 1;
-    --stroke-width: 0.5em;
+  .icon svg g:not(#svg-group-y) {
+    opacity: 0;
+    transform: scale(0);
+    pointer-events: none;
+  }
+  #svg-group-y {
+    transform: scale(6) translate(12px, 12px) !important;
+  }
+  #svg-group-y path {
+    --stroke-width: 0.5em !important;
   }
 }
 body {
@@ -211,57 +212,59 @@ header {
         <div id="spacer"></div>
         <!--a href="https://login.yCanta.com" target="_blank" style="float:right; line-height: 2.9rem; margin-right:1rem">Documentation</a-->
         <div class="icon transition" style="float:left; margin-right: 2rem;">
-          <svg class="icon-svg" viewBox="0 0 25 25" preserveAspectRatio="xMidYMid meet">
-            <g class="full-word">
-              <!-- Musical Notes -->
-              <g transform="translate(18, 4) scale(1.5)">
-                <path d="M 0,0 L 1.5,-0.3 V 1.5 M 0,0 V 1.8" class="ltr-path" />
-                <circle cx="0" cy="1.8" r="0.4" class="fill-secondary" />
-                <circle cx="1.5" cy="1.5" r="0.4" class="fill-secondary" />
-              </g>
-              <g transform="translate(4, 18) scale(1.5)">
-                <path d="M 0,0 L 1.5,-0.3 V 1.5 M 0,0 V 1.8" class="ltr-path" />
-                <circle cx="0" cy="1.8" r="0.4" class="fill-secondary" />
-                <circle cx="1.5" cy="1.5" r="0.4" class="fill-secondary" />
-              </g>
-              <!-- yCanta Word -->
-              <g transform="translate(2, 10.5) scale(2.3)">
-                <!-- y -->
-                <g transform="translate(0, 0)">
-                  <path d="M 0,0 V 1 A 0.5 0.5 0 0 0 1,1 V 0" class="ltr-path" />
-                  <path d="M 1,0 V 2 A 0.5 0.5 0 0 1 0,2.5" class="ltr-path secondary y-tail" />
-                </g>
-                <!-- C -->
-                <g transform="translate(1.2, 0)">
-                  <path d="M 1,0.2 A 0.5 0.7 0 1 0 1,1.2" class="ltr-path" />
-                  <path d="M 1,1.2 A 0.5 0.7 0 0 0 1,1.8" class="ltr-path secondary c-bottom" />
-                </g>
-                <!-- a -->
-                <g transform="translate(2.4, 0.5)">
-                  <circle cx="0.5" cy="0.5" r="0.5" class="ltr-path" />
-                  <path d="M 1,0 V 1" class="ltr-path secondary a-stem" />
-                </g>
-                <!-- n -->
-                <g transform="translate(3.6, 0.5)">
-                  <path d="M 0,1 V 0.5 A 0.5 0.5 0 0 1 1,0.5 V 1" class="ltr-path secondary" />
-                  <path d="M 0,1 V 0" class="ltr-path n-stem" />
-                </g>
-                <!-- t -->
-                <g transform="translate(4.8, 0)">
-                  <path d="M 0.5,-0.2 V 1.8" class="ltr-path t-stem" />
-                  <path d="M 0,0.5 H 1" class="ltr-path secondary t-cross" />
-                </g>
-                <!-- a -->
-                <g transform="translate(6, 0.5)">
-                  <circle cx="0.5" cy="0.5" r="0.5" class="ltr-path" />
-                  <path d="M 1,0 V 1" class="ltr-path secondary a-stem" />
-                </g>
-              </g>
+          <svg viewBox="0 0 240 80" preserveAspectRatio="xMidYMid meet">
+            <!-- Top Note -->
+            <g id="svg-note-top" transform="translate(210, 5) scale(0.8) skewY(-10)">
+              <path class="svg-note-stem" d="M0,5 V25" />
+              <path class="svg-note-head" d="M-4,25 A4,4 0 1,0 0,29 A4,4 0 0,0 -4,25" />
+              <path class="svg-note-stem" d="M12,0 V20" />
+              <path class="svg-note-head" d="M8,20 A4,4 0 1,0 12,24 A4,4 0 0,0 8,20" />
+              <path class="svg-note-stem" d="M0,5 L12,0" />
             </g>
-            <!-- Large y for small containers -->
-            <g class="y-only" transform="translate(12.5, 11) scale(6)">
-              <path d="M -0.5,-0.5 V 0.5 A 0.5 0.5 0 0 0 0.5,0.5 V -0.5" class="ltr-path" />
-              <path d="M 0.5,-0.5 V 1.5 A 0.5 0.5 0 0 1 -0.5,2" class="ltr-path secondary" />
+
+            <!-- Bottom Note -->
+            <g id="svg-note-bottom" transform="translate(15, 45) scale(0.8) skewY(-10)">
+              <path class="svg-note-stem" d="M0,5 V25" />
+              <path class="svg-note-head" d="M-4,25 A4,4 0 1,0 0,29 A4,4 0 0,0 -4,25" />
+              <path class="svg-note-stem" d="M12,0 V20" />
+              <path class="svg-note-head" d="M8,20 A4,4 0 1,0 12,24 A4,4 0 0,0 8,20" />
+              <path class="svg-note-stem" d="M0,5 L12,0" />
+            </g>
+
+            <!-- y -->
+            <g id="svg-group-y" transform="translate(35, 20)">
+              <path id="svg-char-y" d="M0,0 C0,15 5,20 12,20 C19,20 24,15 24,0" />
+              <path id="svg-char-y-tail" d="M24,0 V28 C24,35 18,40 10,40" />
+            </g>
+
+            <!-- C -->
+            <g id="svg-group-C" transform="translate(70, 20)">
+              <path id="svg-char-C-top" d="M20,5 C18,0 5,0 5,15" />
+              <path id="svg-char-C-bottom" d="M5,15 C5,30 18,30 20,25" />
+            </g>
+
+            <!-- a -->
+            <g id="svg-group-a" transform="translate(100, 25)">
+              <path id="svg-char-a-body" d="M18,15 A9,9 0 1,1 18,14 Z" />
+              <path id="svg-char-a-tail" d="M18,8 V20" />
+            </g>
+
+            <!-- n -->
+            <g id="svg-group-n" transform="translate(130, 25)">
+              <path id="svg-char-n-stem" d="M0,0 V20" />
+              <path id="svg-char-n-arch" d="M0,8 C0,-5 18,-5 18,8 V20" />
+            </g>
+
+            <!-- t -->
+            <g id="svg-group-t" transform="translate(160, 20)">
+              <path id="svg-char-t-stem" d="M8,0 V25 C8,30 12,32 18,30" />
+              <path id="svg-char-t-cross" d="M2,12 H14" />
+            </g>
+
+            <!-- a2 -->
+            <g id="svg-group-a2" transform="translate(190, 25)">
+              <path id="svg-char-a2-body" d="M18,15 A9,9 0 1,1 18,14 Z" />
+              <path id="svg-char-a2-tail" d="M18,8 V20" />
             </g>
           </svg>
         </div>
