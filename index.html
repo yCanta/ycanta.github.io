@@ -64,9 +64,6 @@
 }
 
 /*ICON STYLING*/
-.icon *, .icon *:after, .icon *:before {
-  box-sizing: border-box;
-}
 .icon, #header, #header h1, #spacer {
   --scroll-range: calc(var(--scroll-stop-change) - var(--scroll-start-change));
   --scroll-percent: calc(
@@ -85,159 +82,63 @@
 .icon {
   --initial-value: 8;
   --final-value: 2.2;
-  aspect-ratio: 1 / 1;
-  font-size: min(calc(var(--linear-change) * 1px), 1.3vw);
-}
-.icon:hover .ltr {
-  transition: border-width 1s;
-  --stroke-width: .15em;
-  --middle-offset: 0em;
-}
-.ltr {
-  --stroke-width: min(var(--parabola), 0.5em);
   --color: lightblue;
   --secondary-color: cornflowerblue;
-  --border-adjust: calc(-1 * var(--stroke-width));
-  --middle-offset: .25em;
-  display: inline-block;
-  width: 1em;
-  height: calc(1em + var(--middle-offset));
-  margin: 1em 0.1em;
-  position: relative;
-  font-size: 3em;
-  @container (max-width: 125px) {
-    --stroke-width: 0;
-    transition: all .5s;
-    width: 0em;
-    margin: 1em 0px;
-    opacity: 0;
-  }
-}
-.y {
-  border: var(--stroke-width) solid var(--color);
-  border-top: none;
-  border-bottom-left-radius: 50%;
-  border-bottom-right-radius: 50%;
-  @container (max-width: 125px) {
-    --stroke-width: .5em;
-    font-size: 7em;
-    margin-bottom: 2em;
-    width: 1em;
-    opacity: 1;
-  }
-}
-.y:after {
-  position: absolute;
-  top: 0em;
-  left: var(--border-adjust);
-  width: 1em;
-  height: calc(2em + var(--middle-offset));
-  content: ' ';
-  border-right: var(--stroke-width) solid var(--secondary-color);
-  border-bottom: var(--stroke-width) solid var(--secondary-color);
-  border-bottom-right-radius: 80% 50%;
-}
-.C::before {
-  border: var(--stroke-width) solid var(--color);
-  border-right: none;
-  position: absolute;
-  top: calc(-1em + var(--middle-offset));
-  left: 0;
-  width: 1em;
-  height: 2em;
-  content: ' ';
-  border-top-left-radius: 70% 45%;
-  border-bottom-left-radius: 70% 45%;
-  border-bottom-color: var(--secondary-color);
-}
-.a {
-  border: var(--stroke-width) solid var(--color);
-  border-radius: 50%;
-}
-.a:after {
-  border-right: var(--stroke-width) solid var(--secondary-color);
-  position: absolute;
-  top: calc(var(--border-adjust) + .5em);
-  left: var(--border-adjust);
-  width: 1em;
-  height: calc(.5em + var(--middle-offset));
-  content: ' ';
-}
-.n {
-  border: var(--stroke-width) solid var(--secondary-color);
-  border-bottom: 0;
-  border-top-right-radius: 50%;
-  border-top-left-radius: 50%;
-}
-.n:before {
-  border-left: var(--stroke-width) solid var(--color);
-  position: absolute;
-  top: calc(var(--border-adjust));
-  left: var(--border-adjust);
-  width: 1em;
-  height: calc(1em + var(--middle-offset));
-  content: ' ';
-}
-.t {
-  margin: 1em 0;
-}
-.t:before {
-  border-left: var(--stroke-width) solid var(--color);
-  position: absolute;
-  top: calc(-1em + var(--middle-offset));
-  left: calc(.5em - var(--stroke-width)/2);
-  width: 1em;
-  height: 2em;
-  content: ' ';
-}
-.t:after {
-  border-top: var(--stroke-width) solid var(--secondary-color);
-  position: absolute;
-  top: calc(var(--border-adjust)/2);
-  width: 1em;
-  height: 1em;
-  content: ' ';
-}
-.icon {
+  --stroke-width: min(var(--parabola), 0.5em);
+  --middle-offset: 0.25em;
+  aspect-ratio: 1 / 1;
+  font-size: min(calc(var(--linear-change) * 1px), 1.3vw);
   position: relative;
   width: 25em;
   height: 25em;
   border-radius: 5em;
   background: var(--background);
-  display: flex; /* Make the icon a flex container */
-  justify-content: center; /* Center horizontally */
-  align-items: center; /* Center vertically */
+  display: flex;
+  justify-content: center;
+  align-items: center;
   container-type: size;
 }
-.note {
-  position: absolute;
-  top: -.5em;
-  width: 2em;
-  height: 2em;
-  border: var(--stroke-width) solid var(--color);
-  border-bottom: none;
-  transform: skewY(-10deg) scale(.5);
-  right: 2.5em; 
+
+.icon:hover {
+  --stroke-width: 0.15em;
+  --middle-offset: 0em;
 }
-.note:before {
-  position: absolute;
-  right: 100%;
-  bottom: -.5em;
-  width: 1em;
-  height: 1em;
-  border: var(--stroke-width) solid var(--secondary-color);
-  border-radius: 100%;
-  content: ' ';
+
+.icon-svg {
+  width: 100%;
+  height: 100%;
 }
-.note:after {
-  position: absolute;
-  left: calc(100% - 1em + var(--stroke-width));
-  bottom: -.5em;
-  width: 1em;
-  height: 1em;
-  border: var(--stroke-width) solid var(--secondary-color);
-  border-radius: 100%;
-  content: ' ';
+
+.ltr-path {
+  fill: none;
+  stroke: var(--color);
+  stroke-width: calc(var(--stroke-width) * 3);
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  transition: stroke-width 1s, transform 1s, opacity 0.5s;
+  vector-effect: non-scaling-stroke;
+}
+
+.secondary { stroke: var(--secondary-color); }
+.fill-secondary { fill: var(--secondary-color); stroke: none; transition: fill 1s; }
+
+/* Dynamic letter adjustments */
+.y-tail, .a-stem, .n-stem, .t-stem, .c-bottom {
+  transform: translateY(calc(var(--middle-offset) * 3));
+}
+.t-cross {
+  transform: translateY(calc(var(--middle-offset) * -3));
+}
+
+.full-word { opacity: 1; transition: opacity 0.5s; }
+.y-only { opacity: 0; transition: opacity 0.5s; }
+
+@container (max-width: 125px) {
+  .full-word { opacity: 0; }
+  .y-only {
+    opacity: 1;
+    --stroke-width: 0.5em;
+  }
 }
 body {
   margin-top: 0;
@@ -310,10 +211,59 @@ header {
         <div id="spacer"></div>
         <!--a href="https://login.yCanta.com" target="_blank" style="float:right; line-height: 2.9rem; margin-right:1rem">Documentation</a-->
         <div class="icon transition" style="float:left; margin-right: 2rem;">
-          <span class="ltr note">
-          </span>
-          <span class="word"><span class="ltr y"></span><span class="ltr C"></span><span class="ltr a"></span><span class="ltr n"></span><span class="ltr t"></span><span class="ltr a"></span></span>
-          <span class="ltr note" style="top:unset; bottom: 0em; right: unset; left: 2em;"></span>
+          <svg class="icon-svg" viewBox="0 0 25 25" preserveAspectRatio="xMidYMid meet">
+            <g class="full-word">
+              <!-- Musical Notes -->
+              <g transform="translate(18, 4) scale(1.5)">
+                <path d="M 0,0 L 1.5,-0.3 V 1.5 M 0,0 V 1.8" class="ltr-path" />
+                <circle cx="0" cy="1.8" r="0.4" class="fill-secondary" />
+                <circle cx="1.5" cy="1.5" r="0.4" class="fill-secondary" />
+              </g>
+              <g transform="translate(4, 18) scale(1.5)">
+                <path d="M 0,0 L 1.5,-0.3 V 1.5 M 0,0 V 1.8" class="ltr-path" />
+                <circle cx="0" cy="1.8" r="0.4" class="fill-secondary" />
+                <circle cx="1.5" cy="1.5" r="0.4" class="fill-secondary" />
+              </g>
+              <!-- yCanta Word -->
+              <g transform="translate(2, 10.5) scale(2.3)">
+                <!-- y -->
+                <g transform="translate(0, 0)">
+                  <path d="M 0,0 V 1 A 0.5 0.5 0 0 0 1,1 V 0" class="ltr-path" />
+                  <path d="M 1,0 V 2 A 0.5 0.5 0 0 1 0,2.5" class="ltr-path secondary y-tail" />
+                </g>
+                <!-- C -->
+                <g transform="translate(1.2, 0)">
+                  <path d="M 1,0.2 A 0.5 0.7 0 1 0 1,1.2" class="ltr-path" />
+                  <path d="M 1,1.2 A 0.5 0.7 0 0 0 1,1.8" class="ltr-path secondary c-bottom" />
+                </g>
+                <!-- a -->
+                <g transform="translate(2.4, 0.5)">
+                  <circle cx="0.5" cy="0.5" r="0.5" class="ltr-path" />
+                  <path d="M 1,0 V 1" class="ltr-path secondary a-stem" />
+                </g>
+                <!-- n -->
+                <g transform="translate(3.6, 0.5)">
+                  <path d="M 0,1 V 0.5 A 0.5 0.5 0 0 1 1,0.5 V 1" class="ltr-path secondary" />
+                  <path d="M 0,1 V 0" class="ltr-path n-stem" />
+                </g>
+                <!-- t -->
+                <g transform="translate(4.8, 0)">
+                  <path d="M 0.5,-0.2 V 1.8" class="ltr-path t-stem" />
+                  <path d="M 0,0.5 H 1" class="ltr-path secondary t-cross" />
+                </g>
+                <!-- a -->
+                <g transform="translate(6, 0.5)">
+                  <circle cx="0.5" cy="0.5" r="0.5" class="ltr-path" />
+                  <path d="M 1,0 V 1" class="ltr-path secondary a-stem" />
+                </g>
+              </g>
+            </g>
+            <!-- Large y for small containers -->
+            <g class="y-only" transform="translate(12.5, 11) scale(6)">
+              <path d="M -0.5,-0.5 V 0.5 A 0.5 0.5 0 0 0 0.5,0.5 V -0.5" class="ltr-path" />
+              <path d="M 0.5,-0.5 V 1.5 A 0.5 0.5 0 0 1 -0.5,2" class="ltr-path secondary" />
+            </g>
+          </svg>
         </div>
         <h1 style="font-size: min(2.2em, 10vw)">y·Can·ta</h1>
         <p style="font-size: min(4vw, 1em); margin-top: 0.5em"><b>/ and sing! /</b></p>
