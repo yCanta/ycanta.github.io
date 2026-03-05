@@ -14,17 +14,19 @@
   --total-slides: 3;
   --slide-width: min(800px, 98vw);
   --scroll-y-no: 0;
-  --y-intercept: 0.5em;
-  --lowest-y: 0.15em;
-  --lowest-y-x: 100;
-  --parabola: calc((var(--y-intercept) - var(--lowest-y)) / (var(--lowest-y-x) * var(--lowest-y-x)) * (var(--scroll-y-no) - var(--lowest-y-x)) * (var(--scroll-y-no) - var(--lowest-y-x)) + var(--lowest-y));
+  /* Mathematical Parabola: (y-y0) = a(x-x0)^2. We want intercept at 15 (0.5em), low point 4.5 (0.15em) at scroll=100. */
+  --p-intercept: 15;
+  --p-lowest: 4.5;
+  --p-lowest-x: 100;
+  --p-a: calc((var(--p-intercept) - var(--p-lowest)) / (var(--p-lowest-x) * var(--p-lowest-x)));
+  --parabola-val: calc(var(--p-a) * (var(--scroll-y-no) - var(--p-lowest-x)) * (var(--scroll-y-no) - var(--p-lowest-x)) + var(--p-lowest));
+  --parabola: calc(var(--parabola-val) * 0.03333em);
 
 /*Linear*/
   --initial-value: 200;  /* Initial value, e.g., 200px, 200%, 1 */
   --final-value: 100;    /* Final value, e.g., 100px, 100%, 0 */
   --scroll-start-change: 0; /* Scroll starts at top of viewport */
   --scroll-stop-change: 300;  /* Scroll end position in pixels */
-  --scroll-position: var(--scroll-y-no);    /* Current scroll position; updated by JavaScript */
 }
 
 [name=slider-group] {
@@ -64,15 +66,24 @@
 }
 
 /*ICON STYLING*/
-#header, #header h1, #spacer {
+.icon-wrapper {
+  float:left;
+  margin-right: 2rem;
+  --initial-value: 8;
+  --final-value: 2.2;
+  --size-val: min(calc(var(--linear-change) * 25px), 32.5vw);
+  width: var(--size-val);
+  height: var(--size-val);
+  container-type: size;
+  display: block;
+}
+.icon, .icon-wrapper, #header, #header h1, #spacer {
   --scroll-range: calc(var(--scroll-stop-change) - var(--scroll-start-change));
   --scroll-percent: calc(
     clamp(
-      0, /* Ensure the value is not less than 0 */
-      calc(
-        (var(--scroll-position) - var(--scroll-start-change)) / var(--scroll-range)
-      ),
-      1  /* Ensure the value is not greater than 1 */
+      0,
+      (var(--scroll-y-no) - var(--scroll-start-change)) / var(--scroll-range),
+      1
     )
   );
   --linear-change: calc(
@@ -80,13 +91,17 @@
   );
 }
 .icon {
-  --initial-value: 8;
-  --final-value: 2.2;
-  font-size: min(calc(var(--linear-change) * 1px), 1.3vw);
-  --stroke-width: min(var(--parabola), 0.5em);
+  --stroke-width: var(--parabola);
   --color: lightblue;
   --secondary-color: cornflowerblue;
   --middle-offset: .25em;
+  --sw-units-base: calc(var(--stroke-width) * 10 / 1em);
+  width: 100%;
+  height: 100%;
+  border-radius: 20%;
+  background: var(--background);
+  display: block;
+  font-size: calc(var(--size-val) / 25);
 }
 .icon:hover {
   --stroke-width: .15em;
@@ -131,6 +146,24 @@ header {
     padding: 2rem;
   }
 }
+
+/* Continuous scroll-linked transition */
+.ltr-item:not(.y-g), .note-g {
+  opacity: calc(1 - var(--scroll-percent) * 1.5);
+  transform: scale(calc(1 - var(--scroll-percent)));
+  transform-origin: center;
+}
+.y-g {
+  --p: var(--scroll-percent);
+  /* Scale from 1 to 7, translate to center (125, 125) */
+  /* Origin is the center of the 'y' character relative to its (0,0) which is (15, -7.5) */
+  transform: translate(calc(93px * var(--p)), calc(-7.5px * var(--p))) scale(calc(1 + 6 * var(--p)));
+  transform-origin: 15px -7.5px;
+}
+/* Ensure positional transforms are NOT overridden by dynamic CSS transforms */
+.ltr-item-pos {
+  /* This class is just a marker for where attributes should handle position */
+}
 </style>
 <script>
   document.addEventListener('DOMContentLoaded', () => {
@@ -162,96 +195,104 @@ header {
         </span>
         <div id="spacer"></div>
         <!--a href="https://login.yCanta.com" target="_blank" style="float:right; line-height: 2.9rem; margin-right:1rem">Documentation</a-->
-        <div style="float:left; margin-right: 2rem;">
-<svg class="icon transition" viewBox="0 0 250 250" xmlns="http://www.w3.org/2000/svg" style="container-type: size; width: 25em; height: 25em;">
+        <div class="icon-wrapper">
+<svg class="icon transition" viewBox="0 0 250 250" xmlns="http://www.w3.org/2000/svg">
   <style>
     .icon-svg-content {
-      --sw-val: calc(var(--stroke-width) / 1em);
-      --mo-val: calc(var(--middle-offset) / 1em);
-      /* 1 icon-em = 10 units. Letters are 3em = 30 units. Stroke 0.5em of 3em = 15 units. */
-      --sw-units: calc(var(--sw-val) * 30);
-      --mo-units: calc(var(--mo-val) * 30);
+      /* Base stroke from parabola/hover + extra weight as we scroll to fill the shape */
+      /* At 300px scroll, we want a very thick stroke to fill the 'y' (radius is 15px) */
+      --sw-units: calc(var(--sw-units-base) + (45 * var(--scroll-percent)));
+      --mo-units: calc(var(--middle-offset) * 10 / 1em);
       --c1: var(--color);
       --c2: var(--secondary-color);
     }
     .ltr-g {
       fill: none;
       stroke-width: var(--sw-units);
-      stroke-linecap: butt;
+      stroke-linecap: round;
       stroke-linejoin: round;
-      vector-effect: non-scaling-stroke;
-      transition: stroke-width 0.3s, transform 1s, opacity 1s;
+    }
+    .icon:hover .ltr-g {
+      transition: stroke-width 0.5s, transform 0.5s;
     }
     .c1 { stroke: var(--c1); }
     .c2 { stroke: var(--c2); }
-    .word-g { transition: all 1s; }
-    .ltr-item { transition: all 1s; }
 
-    @container (max-width: 125px) {
-      .ltr-item:not(.y-g) { opacity: 0; pointer-events: none; }
-      .note-g { opacity: 0; pointer-events: none; }
-      .y-g {
-        /* Collapsed y uses 7em font. sw = 0.5em of 7em = 3.5 icon-em = 35 units. */
-        transform: translate(95px, 60px) scale(2.333);
-        transform-origin: 0 0;
-        --sw-units: 35;
-      }
+    .ltr-item, .note-g {
+       transform-origin: center;
     }
+
     .icon-bg { fill: var(--background); }
   </style>
-  <rect class="icon-bg" width="250" height="250" rx="37.5" />
+  <rect class="icon-bg" width="250" height="250" rx="50" />
   <g class="icon-svg-content">
-    <!-- Notes -->
-    <g class="note-g" transform="translate(180, 40) skewY(-10) scale(0.5)">
-       <path class="ltr-g c1" d="M 0,0 L 0,15 A 30,30 0 0 0 60,15 L 60,0" />
-       <circle cx="0" cy="45" r="15" style="fill: var(--c2); stroke: none;" />
-       <circle cx="60" cy="45" r="15" style="fill: var(--c2); stroke: none;" />
+    <!-- Music Notes -->
+    <g class="ltr-item-pos" transform="translate(180, 40) skewY(-10) scale(0.5)">
+      <g class="note-g">
+         <path class="ltr-g c1" d="M 0,60 L 0,0 L 60,0 L 60,60" />
+         <circle cx="0" cy="60" r="15" style="fill: var(--c2); stroke: none;" />
+         <circle cx="60" cy="60" r="15" style="fill: var(--c2); stroke: none;" />
+      </g>
     </g>
-    <g class="note-g" transform="translate(30, 180) skewY(-10) scale(0.5)">
-       <path class="ltr-g c1" d="M 0,0 L 0,15 A 30,30 0 0 0 60,15 L 60,0" />
-       <circle cx="0" cy="45" r="15" style="fill: var(--c2); stroke: none;" />
-       <circle cx="60" cy="45" r="15" style="fill: var(--c2); stroke: none;" />
+    <g class="ltr-item-pos" transform="translate(30, 180) skewY(-10) scale(0.5)">
+      <g class="note-g">
+         <path class="ltr-g c1" d="M 0,60 L 0,0 L 60,0 L 60,60" />
+         <circle cx="0" cy="60" r="15" style="fill: var(--c2); stroke: none;" />
+         <circle cx="60" cy="60" r="15" style="fill: var(--c2); stroke: none;" />
+      </g>
     </g>
 
-    <g class="word-g" transform="translate(18, 140)">
+    <g class="word-g" transform="translate(17, 140)">
       <!-- y -->
-      <g class="ltr-item y-g" transform="translate(3, 0)">
-        <path class="ltr-g c1" d="M 0,-30 L 0,-15 A 15,15 0 0 0 30,-15 L 30,-30"
-              style="transform: scaleY(calc(1 + var(--mo-val))); transform-origin: 0 -15px;" />
-        <path class="ltr-g c2" d="M 30,-15 L 30,0 A 24,15 0 0 1 6,15 L 0,15"
-              style="transform: translateY(var(--mo-units));" />
+      <g class="ltr-item-pos">
+        <g class="ltr-item y-g">
+          <path class="ltr-g c1" d="M 0,-30 L 0,-15 A 15,15 0 0 0 30,-15 L 30,-30"
+                style="transform: translateY(calc(-1 * var(--mo-units)));" />
+          <path class="ltr-g c2" d="M 30,-15 L 30,0 A 15,15 0 0 1 15,15 L 0,15"
+                style="transform: translateY(var(--mo-units));" />
+        </g>
       </g>
       <!-- C -->
-      <g class="ltr-item C-g" transform="translate(39, 0)">
-        <path class="ltr-g c1" d="M 30,-60 L 21,-60 A 21,27 0 0 0 0,-33 L 0,-30"
-              style="transform: translateY(var(--mo-units));" />
-        <path class="ltr-g c2" d="M 0,-30 L 0,-27 A 21,27 0 0 0 21,0 L 30,0"
-              style="transform: translateY(var(--mo-units));" />
+      <g class="ltr-item-pos" transform="translate(36, 0)">
+        <g class="ltr-item C-g">
+            <path class="ltr-g c1" d="M 30,-60 L 21,-60 A 21,27 0 0 0 0,-33 L 0,-30"
+                  style="transform: translateY(calc(-1 * var(--mo-units)));" />
+            <path class="ltr-g c2" d="M 0,-30 L 0,-27 A 21,27 0 0 0 21,0 L 30,0"
+                  style="transform: translateY(var(--mo-units));" />
+        </g>
       </g>
       <!-- a -->
-      <g class="ltr-item a-g" transform="translate(75, 0)">
-        <circle class="ltr-g c1" cx="15" cy="-15" r="15" />
-        <line class="ltr-g c2" x1="30" y1="-30" x2="30" y2="0"
-              style="transform: scaleY(calc(1 + var(--mo-val)*2)); transform-origin: 0 -15px;" />
+      <g class="ltr-item-pos" transform="translate(72, 0)">
+        <g class="ltr-item a-g">
+            <circle class="ltr-g c1" cx="15" cy="-15" r="15" />
+            <line class="ltr-g c2" x1="30" y1="-30" x2="30" y2="0"
+                  style="transform: scaleY(calc(1 + var(--middle-offset)*2/1em)); transform-origin: 30px -15px;" />
+        </g>
       </g>
       <!-- n -->
-      <g class="ltr-item n-g" transform="translate(111, 0)">
-        <path class="ltr-g c2" d="M 0,0 L 0,-15 A 15,15 0 0 1 30,-15 L 30,0"
-              style="transform: scaleY(calc(1 + var(--mo-val))); transform-origin: 0 0;" />
-        <line class="ltr-g c1" x1="0" y1="-30" x2="0" y2="0"
-              style="transform: scaleY(calc(1 + var(--mo-val))); transform-origin: 0 0;" />
+      <g class="ltr-item-pos" transform="translate(108, 0)">
+        <g class="ltr-item n-g">
+            <path class="ltr-g c2" d="M 0,0 L 0,-15 A 15,15 0 0 1 30,-15 L 30,0"
+                  style="transform: scaleY(calc(1 + var(--middle-offset)/1em)); transform-origin: 0 0;" />
+            <line class="ltr-g c1" x1="0" y1="-30" x2="0" y2="0"
+                  style="transform: scaleY(calc(1 + var(--middle-offset)/1em)); transform-origin: 0 0;" />
+        </g>
       </g>
       <!-- t -->
-      <g class="ltr-item t-g" transform="translate(147, 0)">
-        <line class="ltr-g c1" x1="15" y1="-60" x2="15" y2="0"
-              style="transform: translateY(var(--mo-units));" />
-        <line class="ltr-g c2" x1="0" y1="-30" x2="30" y2="-30" />
+      <g class="ltr-item-pos" transform="translate(144, 0)">
+        <g class="ltr-item t-g">
+            <line class="ltr-g c1" x1="15" y1="-60" x2="15" y2="0"
+                  style="transform: translateY(var(--mo-units));" />
+            <line class="ltr-g c2" x1="0" y1="-30" x2="30" y2="-30" />
+        </g>
       </g>
       <!-- a -->
-      <g class="ltr-item a-g" transform="translate(183, 0)">
-        <circle class="ltr-g c1" cx="15" cy="-15" r="15" />
-        <line class="ltr-g c2" x1="30" y1="-30" x2="30" y2="0"
-              style="transform: scaleY(calc(1 + var(--mo-val)*2)); transform-origin: 0 -15px;" />
+      <g class="ltr-item-pos" transform="translate(180, 0)">
+        <g class="ltr-item a-g">
+            <circle class="ltr-g c1" cx="15" cy="-15" r="15" />
+            <line class="ltr-g c2" x1="30" y1="-30" x2="30" y2="0"
+                  style="transform: scaleY(calc(1 + var(--middle-offset)*2/1em)); transform-origin: 30px -15px;" />
+        </g>
       </g>
     </g>
   </g>
