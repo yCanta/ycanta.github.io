@@ -104,7 +104,7 @@
   font-size: calc(var(--size-val) / 25);
 }
 .icon:hover {
-  --stroke-width: .15em;
+  --stroke-width: .5em;
   --middle-offset: 0em;
 }
 body {
@@ -148,17 +148,19 @@ header {
 }
 
 /* Continuous scroll-linked transition */
-.ltr-item:not(.y-g), .note-g {
-  opacity: calc(1 - var(--scroll-percent) * 1.5);
-  transform: scale(calc(1 - var(--scroll-percent)));
+.ltr-item, .note-g {
+  transform-box: fill-box;
   transform-origin: center;
+}
+.ltr-item:not(.y-g), .note-g {
+  opacity: calc(1 - var(--scroll-percent) * 2.5);
+  transform: scale(calc(1 - var(--scroll-percent)));
 }
 .y-g {
   --p: var(--scroll-percent);
-  /* Scale from 1 to 7, translate to center (125, 125) */
-  /* Origin is the center of the 'y' character relative to its (0,0) which is (15, -7.5) */
-  transform: translate(calc(93px * var(--p)), calc(-7.5px * var(--p))) scale(calc(1 + 6 * var(--p)));
-  transform-origin: 15px -7.5px;
+  /* Translate 'y' toward the center of the 250x250 viewBox */
+  /* Starting position for 'y' group is (17, 140) + group internal offset */
+  transform: translate(calc(85px * var(--p)), calc(-15px * var(--p))) scale(calc(1 + 4 * var(--p)));
 }
 /* Ensure positional transforms are NOT overridden by dynamic CSS transforms */
 .ltr-item-pos {
@@ -201,7 +203,7 @@ header {
     .icon-svg-content {
       /* Base stroke from parabola/hover + extra weight as we scroll to fill the shape */
       /* At 300px scroll, we want a very thick stroke to fill the 'y' (radius is 15px) */
-      --sw-units: calc(var(--sw-units-base) + (45 * var(--scroll-percent)));
+      --sw-units: calc(var(--sw-units-base) + (15 * var(--scroll-percent)));
       --mo-units: calc(var(--middle-offset) * 10 / 1em);
       --c1: var(--color);
       --c2: var(--secondary-color);
@@ -211,9 +213,7 @@ header {
       stroke-width: var(--sw-units);
       stroke-linecap: round;
       stroke-linejoin: round;
-    }
-    .icon:hover .ltr-g {
-      transition: stroke-width 0.5s, transform 0.5s;
+      transition: stroke-width 0.5s, transform 0.5s, opacity 0.5s;
     }
     .c1 { stroke: var(--c1); }
     .c2 { stroke: var(--c2); }
