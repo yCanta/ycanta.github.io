@@ -14,17 +14,19 @@
   --total-slides: 3;
   --slide-width: min(800px, 98vw);
   --scroll-y-no: 0;
-  --y-intercept: 0.5em;
-  --lowest-y: 0.15em;
-  --lowest-y-x: 100;
-  --parabola: calc((var(--y-intercept) - var(--lowest-y)) / (var(--lowest-y-x) * var(--lowest-y-x)) * (var(--scroll-y-no) - var(--lowest-y-x)) * (var(--scroll-y-no) - var(--lowest-y-x)) + var(--lowest-y));
+  /* Mathematical Parabola: (y-y0) = a(x-x0)^2. We want intercept at 15 (0.5em), low point 4.5 (0.15em) at scroll=100. */
+  --p-intercept: 15;
+  --p-lowest: 4.5;
+  --p-lowest-x: 100;
+  --p-a: calc((var(--p-intercept) - var(--p-lowest)) / (var(--p-lowest-x) * var(--p-lowest-x)));
+  --parabola-val: calc(var(--p-a) * (var(--scroll-y-no) - var(--p-lowest-x)) * (var(--scroll-y-no) - var(--p-lowest-x)) + var(--p-lowest));
+  --parabola: calc(var(--parabola-val) * 0.03333em);
 
 /*Linear*/
   --initial-value: 200;  /* Initial value, e.g., 200px, 200%, 1 */
   --final-value: 100;    /* Final value, e.g., 100px, 100%, 0 */
   --scroll-start-change: 0; /* Scroll starts at top of viewport */
   --scroll-stop-change: 300;  /* Scroll end position in pixels */
-  --scroll-position: var(--scroll-y-no);    /* Current scroll position; updated by JavaScript */
 }
 
 [name=slider-group] {
@@ -64,18 +66,24 @@
 }
 
 /*ICON STYLING*/
-.icon *, .icon *:after, .icon *:before {
-  box-sizing: border-box;
+.icon-wrapper {
+  float:left;
+  margin-right: 2rem;
+  --initial-value: 8;
+  --final-value: 2.2;
+  --size-val: min(calc(var(--linear-change) * 25px), 32.5vw);
+  width: var(--size-val);
+  height: var(--size-val);
+  container-type: size;
+  display: block;
 }
-.icon, #header, #header h1, #spacer {
+.icon, .icon-wrapper, #header, #header h1, #spacer {
   --scroll-range: calc(var(--scroll-stop-change) - var(--scroll-start-change));
   --scroll-percent: calc(
     clamp(
-      0, /* Ensure the value is not less than 0 */
-      calc(
-        (var(--scroll-position) - var(--scroll-start-change)) / var(--scroll-range)
-      ),
-      1  /* Ensure the value is not greater than 1 */
+      0,
+      (var(--scroll-y-no) - var(--scroll-start-change)) / var(--scroll-range),
+      1
     )
   );
   --linear-change: calc(
@@ -83,161 +91,21 @@
   );
 }
 .icon {
-  --initial-value: 8;
-  --final-value: 2.2;
-  aspect-ratio: 1 / 1;
-  font-size: min(calc(var(--linear-change) * 1px), 1.3vw);
-}
-.icon:hover .ltr {
-  transition: border-width 1s;
-  --stroke-width: .15em;
-  --middle-offset: 0em;
-}
-.ltr {
-  --stroke-width: min(var(--parabola), 0.5em);
+  --stroke-width: var(--parabola);
   --color: lightblue;
   --secondary-color: cornflowerblue;
-  --border-adjust: calc(-1 * var(--stroke-width));
   --middle-offset: .25em;
-  display: inline-block;
-  width: 1em;
-  height: calc(1em + var(--middle-offset));
-  margin: 1em 0.1em;
-  position: relative;
-  font-size: 3em;
-  @container (max-width: 125px) {
-    --stroke-width: 0;
-    transition: all .5s;
-    width: 0em;
-    margin: 1em 0px;
-    opacity: 0;
-  }
-}
-.y {
-  border: var(--stroke-width) solid var(--color);
-  border-top: none;
-  border-bottom-left-radius: 50%;
-  border-bottom-right-radius: 50%;
-  @container (max-width: 125px) {
-    --stroke-width: .5em;
-    font-size: 7em;
-    margin-bottom: 2em;
-    width: 1em;
-    opacity: 1;
-  }
-}
-.y:after {
-  position: absolute;
-  top: 0em;
-  left: var(--border-adjust);
-  width: 1em;
-  height: calc(2em + var(--middle-offset));
-  content: ' ';
-  border-right: var(--stroke-width) solid var(--secondary-color);
-  border-bottom: var(--stroke-width) solid var(--secondary-color);
-  border-bottom-right-radius: 80% 50%;
-}
-.C::before {
-  border: var(--stroke-width) solid var(--color);
-  border-right: none;
-  position: absolute;
-  top: calc(-1em + var(--middle-offset));
-  left: 0;
-  width: 1em;
-  height: 2em;
-  content: ' ';
-  border-top-left-radius: 70% 45%;
-  border-bottom-left-radius: 70% 45%;
-  border-bottom-color: var(--secondary-color);
-}
-.a {
-  border: var(--stroke-width) solid var(--color);
-  border-radius: 50%;
-}
-.a:after {
-  border-right: var(--stroke-width) solid var(--secondary-color);
-  position: absolute;
-  top: calc(var(--border-adjust) + .5em);
-  left: var(--border-adjust);
-  width: 1em;
-  height: calc(.5em + var(--middle-offset));
-  content: ' ';
-}
-.n {
-  border: var(--stroke-width) solid var(--secondary-color);
-  border-bottom: 0;
-  border-top-right-radius: 50%;
-  border-top-left-radius: 50%;
-}
-.n:before {
-  border-left: var(--stroke-width) solid var(--color);
-  position: absolute;
-  top: calc(var(--border-adjust));
-  left: var(--border-adjust);
-  width: 1em;
-  height: calc(1em + var(--middle-offset));
-  content: ' ';
-}
-.t {
-  margin: 1em 0;
-}
-.t:before {
-  border-left: var(--stroke-width) solid var(--color);
-  position: absolute;
-  top: calc(-1em + var(--middle-offset));
-  left: calc(.5em - var(--stroke-width)/2);
-  width: 1em;
-  height: 2em;
-  content: ' ';
-}
-.t:after {
-  border-top: var(--stroke-width) solid var(--secondary-color);
-  position: absolute;
-  top: calc(var(--border-adjust)/2);
-  width: 1em;
-  height: 1em;
-  content: ' ';
-}
-.icon {
-  position: relative;
-  width: 25em;
-  height: 25em;
-  border-radius: 5em;
+  --sw-units-base: calc(var(--stroke-width) * 10 / 1em);
+  width: 100%;
+  height: 100%;
+  border-radius: 20%;
   background: var(--background);
-  display: flex; /* Make the icon a flex container */
-  justify-content: center; /* Center horizontally */
-  align-items: center; /* Center vertically */
-  container-type: size;
+  display: block;
+  font-size: calc(var(--size-val) / 25);
 }
-.note {
-  position: absolute;
-  top: -.5em;
-  width: 2em;
-  height: 2em;
-  border: var(--stroke-width) solid var(--color);
-  border-bottom: none;
-  transform: skewY(-10deg) scale(.5);
-  right: 2.5em; 
-}
-.note:before {
-  position: absolute;
-  right: 100%;
-  bottom: -.5em;
-  width: 1em;
-  height: 1em;
-  border: var(--stroke-width) solid var(--secondary-color);
-  border-radius: 100%;
-  content: ' ';
-}
-.note:after {
-  position: absolute;
-  left: calc(100% - 1em + var(--stroke-width));
-  bottom: -.5em;
-  width: 1em;
-  height: 1em;
-  border: var(--stroke-width) solid var(--secondary-color);
-  border-radius: 100%;
-  content: ' ';
+.icon:hover {
+  --stroke-width: .5em;
+  --middle-offset: 0em;
 }
 body {
   margin-top: 0;
@@ -278,6 +146,26 @@ header {
     padding: 2rem;
   }
 }
+
+/* Continuous scroll-linked transition */
+.ltr-item, .note-g {
+  transform-box: fill-box;
+  transform-origin: center;
+}
+.ltr-item:not(.y-g), .note-g {
+  opacity: calc(1 - var(--scroll-percent) * 2.5);
+  transform: scale(calc(1 - var(--scroll-percent)));
+}
+.y-g {
+  --p: var(--scroll-percent);
+  /* Translate 'y' toward the center of the 250x250 viewBox */
+  /* Starting position for 'y' group is (17, 140) + group internal offset */
+  transform: translate(calc(85px * var(--p)), calc(-15px * var(--p))) scale(calc(1 + 4 * var(--p)));
+}
+/* Ensure positional transforms are NOT overridden by dynamic CSS transforms */
+.ltr-item-pos {
+  /* This class is just a marker for where attributes should handle position */
+}
 </style>
 <script>
   document.addEventListener('DOMContentLoaded', () => {
@@ -309,11 +197,106 @@ header {
         </span>
         <div id="spacer"></div>
         <!--a href="https://login.yCanta.com" target="_blank" style="float:right; line-height: 2.9rem; margin-right:1rem">Documentation</a-->
-        <div class="icon transition" style="float:left; margin-right: 2rem;">
-          <span class="ltr note">
-          </span>
-          <span class="word"><span class="ltr y"></span><span class="ltr C"></span><span class="ltr a"></span><span class="ltr n"></span><span class="ltr t"></span><span class="ltr a"></span></span>
-          <span class="ltr note" style="top:unset; bottom: 0em; right: unset; left: 2em;"></span>
+        <div class="icon-wrapper">
+<svg class="icon transition" viewBox="0 0 250 250" xmlns="http://www.w3.org/2000/svg">
+  <style>
+    .icon-svg-content {
+      /* Base stroke from parabola/hover + extra weight as we scroll to fill the shape */
+      /* At 300px scroll, we want a very thick stroke to fill the 'y' (radius is 15px) */
+      --sw-units: calc(var(--sw-units-base) + (15 * var(--scroll-percent)));
+      --mo-units: calc(var(--middle-offset) * 10 / 1em);
+      --c1: var(--color);
+      --c2: var(--secondary-color);
+    }
+    .ltr-g {
+      fill: none;
+      stroke-width: var(--sw-units);
+      stroke-linecap: round;
+      stroke-linejoin: round;
+      transition: stroke-width 0.5s, transform 0.5s, opacity 0.5s;
+    }
+    .c1 { stroke: var(--c1); }
+    .c2 { stroke: var(--c2); }
+
+    .ltr-item, .note-g {
+       transform-origin: center;
+    }
+
+    .icon-bg { fill: var(--background); }
+  </style>
+  <rect class="icon-bg" width="250" height="250" rx="50" />
+  <g class="icon-svg-content">
+    <!-- Music Notes -->
+    <g class="ltr-item-pos" transform="translate(180, 40) skewY(-10) scale(0.5)">
+      <g class="note-g">
+         <path class="ltr-g c1" d="M 0,60 L 0,0 L 60,0 L 60,60" />
+         <circle cx="0" cy="60" r="15" style="fill: var(--c2); stroke: none;" />
+         <circle cx="60" cy="60" r="15" style="fill: var(--c2); stroke: none;" />
+      </g>
+    </g>
+    <g class="ltr-item-pos" transform="translate(30, 180) skewY(-10) scale(0.5)">
+      <g class="note-g">
+         <path class="ltr-g c1" d="M 0,60 L 0,0 L 60,0 L 60,60" />
+         <circle cx="0" cy="60" r="15" style="fill: var(--c2); stroke: none;" />
+         <circle cx="60" cy="60" r="15" style="fill: var(--c2); stroke: none;" />
+      </g>
+    </g>
+
+    <g class="word-g" transform="translate(17, 140)">
+      <!-- y -->
+      <g class="ltr-item-pos">
+        <g class="ltr-item y-g">
+          <path class="ltr-g c1" d="M 0,-30 L 0,-15 A 15,15 0 0 0 30,-15 L 30,-30"
+                style="transform: translateY(calc(-1 * var(--mo-units)));" />
+          <path class="ltr-g c2" d="M 30,-15 L 30,0 A 15,15 0 0 1 15,15 L 0,15"
+                style="transform: translateY(var(--mo-units));" />
+        </g>
+      </g>
+      <!-- C -->
+      <g class="ltr-item-pos" transform="translate(36, 0)">
+        <g class="ltr-item C-g">
+            <path class="ltr-g c1" d="M 30,-60 L 21,-60 A 21,27 0 0 0 0,-33 L 0,-30"
+                  style="transform: translateY(calc(-1 * var(--mo-units)));" />
+            <path class="ltr-g c2" d="M 0,-30 L 0,-27 A 21,27 0 0 0 21,0 L 30,0"
+                  style="transform: translateY(var(--mo-units));" />
+        </g>
+      </g>
+      <!-- a -->
+      <g class="ltr-item-pos" transform="translate(72, 0)">
+        <g class="ltr-item a-g">
+            <circle class="ltr-g c1" cx="15" cy="-15" r="15" />
+            <line class="ltr-g c2" x1="30" y1="-30" x2="30" y2="0"
+                  style="transform: scaleY(calc(1 + var(--middle-offset)*2/1em)); transform-origin: 30px -15px;" />
+        </g>
+      </g>
+      <!-- n -->
+      <g class="ltr-item-pos" transform="translate(108, 0)">
+        <g class="ltr-item n-g">
+            <path class="ltr-g c2" d="M 0,0 L 0,-15 A 15,15 0 0 1 30,-15 L 30,0"
+                  style="transform: scaleY(calc(1 + var(--middle-offset)/1em)); transform-origin: 0 0;" />
+            <line class="ltr-g c1" x1="0" y1="-30" x2="0" y2="0"
+                  style="transform: scaleY(calc(1 + var(--middle-offset)/1em)); transform-origin: 0 0;" />
+        </g>
+      </g>
+      <!-- t -->
+      <g class="ltr-item-pos" transform="translate(144, 0)">
+        <g class="ltr-item t-g">
+            <line class="ltr-g c1" x1="15" y1="-60" x2="15" y2="0"
+                  style="transform: translateY(var(--mo-units));" />
+            <line class="ltr-g c2" x1="0" y1="-30" x2="30" y2="-30" />
+        </g>
+      </g>
+      <!-- a -->
+      <g class="ltr-item-pos" transform="translate(180, 0)">
+        <g class="ltr-item a-g">
+            <circle class="ltr-g c1" cx="15" cy="-15" r="15" />
+            <line class="ltr-g c2" x1="30" y1="-30" x2="30" y2="0"
+                  style="transform: scaleY(calc(1 + var(--middle-offset)*2/1em)); transform-origin: 30px -15px;" />
+        </g>
+      </g>
+    </g>
+  </g>
+</svg>
         </div>
         <h1 style="font-size: min(2.2em, 10vw)">y·Can·ta</h1>
         <p style="font-size: min(4vw, 1em); margin-top: 0.5em"><b>/ and sing! /</b></p>
