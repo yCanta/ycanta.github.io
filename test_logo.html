@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html>
+<head>
+<style>
+:root {
+  --color: #ADD8E6;
+  --secondary-color: #6495ED;
+  --stroke-width: 6;
+  --scroll-y-no: 0;
+  /* Simulate the parabola and other vars from index.html */
+  --y-intercept: 0.5em;
+  --lowest-y: 0.15em;
+  --lowest-y-x: 100;
+  --parabola: calc((var(--y-intercept) - var(--lowest-y)) / (var(--lowest-y-x) * var(--lowest-y-x)) * (var(--scroll-y-no) - var(--lowest-y-x)) * (var(--scroll-y-no) - var(--lowest-y-x)) + var(--lowest-y));
+}
+
+body { background: #fafafa; display: flex; flex-direction: column; align-items: center; padding: 2rem; font-family: sans-serif; }
+
+.logo-container {
+  width: 300px;
+  height: 300px;
+  background: white;
+  border-radius: 40px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: relative;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.05);
+  overflow: hidden;
+  container-type: size;
+}
+
+svg {
+  width: 90%;
+  height: 90%;
+  transition: all 0.5s ease-in-out;
+}
+
+path, circle {
+  fill: none;
+  stroke-width: var(--stroke-width);
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  vector-effect: non-scaling-stroke;
+  transition: stroke 0.3s, stroke-width 0.3s;
+}
+
+.primary { stroke: var(--color); }
+.secondary { stroke: var(--secondary-color); }
+.note-head { fill: var(--secondary-color); stroke: none; }
+
+/* Scroll-driven color shift */
+.shimmer-gradient stop {
+  stop-color: var(--color);
+  transition: stop-color 0.2s;
+}
+.shimmer-gradient .middle-stop {
+  stop-color: var(--secondary-color);
+}
+
+.animate-shimmer {
+  stroke: url(#shimmerGradient);
+}
+
+/* Hide text when container is small (collapsed header simulation) */
+@container (max-width: 150px) {
+  .canta-group, .note-decoration {
+    opacity: 0;
+    visibility: hidden;
+  }
+  .y-group {
+    transform: translate(125, 25) scale(2);
+  }
+}
+
+.y-group {
+  transition: transform 0.5s ease-in-out;
+}
+
+/* Harmonic vibration on hover */
+.logo-container:hover .animate-shimmer {
+  animation: harmonic 0.15s linear infinite;
+}
+
+@keyframes harmonic {
+  0% { transform: translate(0, 0) scale(1); }
+  25% { transform: translate(0.5px, -0.5px) scale(1.002); }
+  50% { transform: translate(-0.5px, 0.5px) scale(0.998); }
+  75% { transform: translate(0.5px, 0.5px) scale(1.001); }
+  100% { transform: translate(0, 0) scale(1); }
+}
+
+</style>
+</head>
+<body>
+
+<div class="logo-container" id="logoBox">
+  <svg viewBox="0 0 350 150" id="ycanta-svg">
+    <defs>
+      <linearGradient id="shimmerGradient" x1="0%" y1="0%" x2="100%" y2="0%">
+        <stop offset="0%" stop-color="var(--color)">
+          <animate attributeName="offset" values="-1; 1" dur="4s" repeatCount="indefinite" />
+        </stop>
+        <stop offset="50%" stop-color="var(--secondary-color)">
+           <animate attributeName="offset" values="0; 2" dur="4s" repeatCount="indefinite" />
+        </stop>
+        <stop offset="100%" stop-color="var(--color)">
+           <animate attributeName="offset" values="1; 3" dur="4s" repeatCount="indefinite" />
+        </stop>
+      </linearGradient>
+    </defs>
+
+    <!-- y / note -->
+    <g class="y-group" transform="translate(10, 20)">
+      <path class="animate-shimmer primary" d="M 10 35 Q 10 65 35 65 Q 60 65 60 35" />
+      <path class="animate-shimmer secondary" d="M 60 35 L 60 75 Q 60 90 45 90 Q 30 90 30 80" />
+      <circle class="note-head" cx="30" cy="80" r="8" />
+    </g>
+
+    <!-- canta text -->
+    <g class="canta-group" transform="translate(90, 20)">
+      <!-- C -->
+      <path class="animate-shimmer primary" d="M 40 40 A 15 15 0 1 0 40 70" />
+      <path class="animate-shimmer secondary" d="M 25 70 A 15 15 0 0 1 25 40" />
+
+      <!-- a -->
+      <g transform="translate(60, 0)">
+        <circle class="animate-shimmer primary" cx="15" cy="55" r="15" />
+        <path class="animate-shimmer secondary" d="M 30 40 L 30 70" />
+      </g>
+
+      <!-- n -->
+      <g transform="translate(105, 0)">
+        <path class="animate-shimmer primary" d="M 10 70 L 10 40" />
+        <path class="animate-shimmer secondary" d="M 10 40 Q 25 40 25 55 L 25 70" />
+      </g>
+
+      <!-- t -->
+      <g transform="translate(145, 0)">
+        <path class="animate-shimmer primary" d="M 15 20 L 15 70" />
+        <path class="animate-shimmer secondary" d="M 5 40 L 25 40" />
+      </g>
+
+      <!-- a -->
+      <g transform="translate(185, 0)">
+        <circle class="animate-shimmer primary" cx="15" cy="55" r="15" />
+        <path class="animate-shimmer secondary" d="M 30 40 L 30 70" />
+      </g>
+    </g>
+
+    <!-- Decorative floating notes -->
+    <g class="note-decoration" transform="translate(320, 30) rotate(-10)">
+       <path class="secondary" d="M 5 0 L 5 20" />
+       <circle class="note-head" cx="0" cy="20" r="5" />
+    </g>
+    <g class="note-decoration" transform="translate(30, 120) rotate(15)">
+       <path class="primary" d="M 5 0 L 5 15" />
+       <circle class="note-head" cx="0" cy="15" r="4" style="fill: var(--color);" />
+    </g>
+  </svg>
+</div>
+
+<div style="margin-top: 2rem;">
+  <button onclick="resize(300)">Expand</button>
+  <button onclick="resize(120)">Collapse</button>
+  <p>Scroll simulation (shimmer) is automatic. Hover for harmonic effect.</p>
+</div>
+
+<script>
+function resize(size) {
+  const box = document.getElementById('logoBox');
+  box.style.width = size + 'px';
+  box.style.height = size + 'px';
+}
+</script>
+
+</body>
+</html>

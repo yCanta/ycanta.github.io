@@ -6,7 +6,7 @@
     <title>yCanta</title>
     <meta name="description" content="A free intuitive song manager with type-to-search presenation mode and PDF export for text and chords.">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/water.css@2/out/water.css">
-    <link rel="icon" type="image/x-icon" href="favicon.png">
+    <link rel="icon" type="image/svg+xml" href="favicon.svg">
   </head>
   <body style="font-size: 20px;">
     <style type="text/css">
@@ -63,19 +63,14 @@
   border-radius: 4rem;
 }
 
-/*ICON STYLING*/
-.icon *, .icon *:after, .icon *:before {
-  box-sizing: border-box;
-}
+/* ICON STYLING */
 .icon, #header, #header h1, #spacer {
   --scroll-range: calc(var(--scroll-stop-change) - var(--scroll-start-change));
   --scroll-percent: calc(
     clamp(
-      0, /* Ensure the value is not less than 0 */
-      calc(
-        (var(--scroll-position) - var(--scroll-start-change)) / var(--scroll-range)
-      ),
-      1  /* Ensure the value is not greater than 1 */
+      0,
+      calc((var(--scroll-position) - var(--scroll-start-change)) / var(--scroll-range)),
+      1
     )
   );
   --linear-change: calc(
@@ -85,159 +80,79 @@
 .icon {
   --initial-value: 8;
   --final-value: 2.2;
-  aspect-ratio: 1 / 1;
-  font-size: min(calc(var(--linear-change) * 1px), 1.3vw);
-}
-.icon:hover .ltr {
-  transition: border-width 1s;
-  --stroke-width: .15em;
-  --middle-offset: 0em;
-}
-.ltr {
-  --stroke-width: min(var(--parabola), 0.5em);
   --color: lightblue;
   --secondary-color: cornflowerblue;
-  --border-adjust: calc(-1 * var(--stroke-width));
-  --middle-offset: .25em;
-  display: inline-block;
-  width: 1em;
-  height: calc(1em + var(--middle-offset));
-  margin: 1em 0.1em;
-  position: relative;
-  font-size: 3em;
-  @container (max-width: 125px) {
-    --stroke-width: 0;
-    transition: all .5s;
-    width: 0em;
-    margin: 1em 0px;
-    opacity: 0;
-  }
-}
-.y {
-  border: var(--stroke-width) solid var(--color);
-  border-top: none;
-  border-bottom-left-radius: 50%;
-  border-bottom-right-radius: 50%;
-  @container (max-width: 125px) {
-    --stroke-width: .5em;
-    font-size: 7em;
-    margin-bottom: 2em;
-    width: 1em;
-    opacity: 1;
-  }
-}
-.y:after {
-  position: absolute;
-  top: 0em;
-  left: var(--border-adjust);
-  width: 1em;
-  height: calc(2em + var(--middle-offset));
-  content: ' ';
-  border-right: var(--stroke-width) solid var(--secondary-color);
-  border-bottom: var(--stroke-width) solid var(--secondary-color);
-  border-bottom-right-radius: 80% 50%;
-}
-.C::before {
-  border: var(--stroke-width) solid var(--color);
-  border-right: none;
-  position: absolute;
-  top: calc(-1em + var(--middle-offset));
-  left: 0;
-  width: 1em;
-  height: 2em;
-  content: ' ';
-  border-top-left-radius: 70% 45%;
-  border-bottom-left-radius: 70% 45%;
-  border-bottom-color: var(--secondary-color);
-}
-.a {
-  border: var(--stroke-width) solid var(--color);
-  border-radius: 50%;
-}
-.a:after {
-  border-right: var(--stroke-width) solid var(--secondary-color);
-  position: absolute;
-  top: calc(var(--border-adjust) + .5em);
-  left: var(--border-adjust);
-  width: 1em;
-  height: calc(.5em + var(--middle-offset));
-  content: ' ';
-}
-.n {
-  border: var(--stroke-width) solid var(--secondary-color);
-  border-bottom: 0;
-  border-top-right-radius: 50%;
-  border-top-left-radius: 50%;
-}
-.n:before {
-  border-left: var(--stroke-width) solid var(--color);
-  position: absolute;
-  top: calc(var(--border-adjust));
-  left: var(--border-adjust);
-  width: 1em;
-  height: calc(1em + var(--middle-offset));
-  content: ' ';
-}
-.t {
-  margin: 1em 0;
-}
-.t:before {
-  border-left: var(--stroke-width) solid var(--color);
-  position: absolute;
-  top: calc(-1em + var(--middle-offset));
-  left: calc(.5em - var(--stroke-width)/2);
-  width: 1em;
-  height: 2em;
-  content: ' ';
-}
-.t:after {
-  border-top: var(--stroke-width) solid var(--secondary-color);
-  position: absolute;
-  top: calc(var(--border-adjust)/2);
-  width: 1em;
-  height: 1em;
-  content: ' ';
-}
-.icon {
+  --stroke-width-raw: min(var(--parabola), 0.5em);
+  --stroke-width: calc(var(--stroke-width-raw) * 1.5);
+  aspect-ratio: 1 / 1;
+  font-size: min(calc(var(--linear-change) * 1px), 1.3vw);
   position: relative;
   width: 25em;
   height: 25em;
   border-radius: 5em;
   background: var(--background);
-  display: flex; /* Make the icon a flex container */
-  justify-content: center; /* Center horizontally */
-  align-items: center; /* Center vertically */
+  display: flex;
+  justify-content: center;
+  align-items: center;
   container-type: size;
+  overflow: hidden;
 }
-.note {
-  position: absolute;
-  top: -.5em;
-  width: 2em;
-  height: 2em;
-  border: var(--stroke-width) solid var(--color);
-  border-bottom: none;
-  transform: skewY(-10deg) scale(.5);
-  right: 2.5em; 
+
+.icon svg {
+  width: 90%;
+  height: 90%;
+  transition: all 0.5s ease-in-out;
 }
-.note:before {
-  position: absolute;
-  right: 100%;
-  bottom: -.5em;
-  width: 1em;
-  height: 1em;
-  border: var(--stroke-width) solid var(--secondary-color);
-  border-radius: 100%;
-  content: ' ';
+
+.icon path, .icon circle {
+  fill: none;
+  stroke-width: 6; /* Fixed base width, scaled via viewBox and font-size */
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  vector-effect: non-scaling-stroke;
+  transition: stroke 0.3s, stroke-width 0.3s;
 }
-.note:after {
-  position: absolute;
-  left: calc(100% - 1em + var(--stroke-width));
-  bottom: -.5em;
-  width: 1em;
-  height: 1em;
-  border: var(--stroke-width) solid var(--secondary-color);
-  border-radius: 100%;
-  content: ' ';
+
+.icon .primary { stroke: var(--color); }
+.icon .secondary { stroke: var(--secondary-color); }
+.icon .note-head { fill: var(--secondary-color); stroke: none; }
+
+/* Scroll-driven color shift */
+.shimmer-path {
+  stroke: url(#shimmerGradient);
+}
+
+/* Harmonic vibration on hover */
+.icon:hover .shimmer-path {
+  animation: harmonic 0.15s linear infinite;
+  stroke-width: 8;
+}
+
+@keyframes harmonic {
+  0% { transform: translate(0, 0) scale(1); }
+  25% { transform: translate(0.5px, -0.5px) scale(1.002); }
+  50% { transform: translate(-0.5px, 0.5px) scale(0.998); }
+  75% { transform: translate(0.5px, 0.5px) scale(1.001); }
+  100% { transform: translate(0, 0) scale(1); }
+}
+
+/* Collapse/Expand behavior mirroring old logo */
+.y-group {
+  transition: transform 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.canta-group, .note-decoration {
+  transition: opacity 0.4s ease-in-out, visibility 0.4s;
+}
+
+@container (max-width: 125px) {
+  .canta-group, .note-decoration {
+    opacity: 0;
+    visibility: hidden;
+  }
+  .y-group {
+    transform: translate(120px, 20px) scale(2.5);
+  }
 }
 body {
   margin-top: 0;
@@ -310,10 +225,56 @@ header {
         <div id="spacer"></div>
         <!--a href="https://login.yCanta.com" target="_blank" style="float:right; line-height: 2.9rem; margin-right:1rem">Documentation</a-->
         <div class="icon transition" style="float:left; margin-right: 2rem;">
-          <span class="ltr note">
-          </span>
-          <span class="word"><span class="ltr y"></span><span class="ltr C"></span><span class="ltr a"></span><span class="ltr n"></span><span class="ltr t"></span><span class="ltr a"></span></span>
-          <span class="ltr note" style="top:unset; bottom: 0em; right: unset; left: 2em;"></span>
+          <svg viewBox="0 0 400 150">
+            <defs>
+              <linearGradient id="shimmerGradient" x1="0%" y1="0%" x2="100%" y2="0%">
+                <stop offset="calc(var(--scroll-percent) * 100% - 20%)" stop-color="var(--color)" />
+                <stop offset="calc(var(--scroll-percent) * 100%)" stop-color="var(--secondary-color)" />
+                <stop offset="calc(var(--scroll-percent) * 100% + 20%)" stop-color="var(--color)" />
+              </linearGradient>
+            </defs>
+            <!-- y / note -->
+            <g class="y-group" transform="translate(20, 20)">
+              <path class="shimmer-path primary" d="M 10 35 Q 10 65 35 65 Q 60 65 60 35" />
+              <path class="shimmer-path secondary" d="M 60 35 L 60 75 Q 60 90 45 90 Q 30 90 30 80" />
+              <circle class="note-head" cx="30" cy="80" r="8" />
+            </g>
+            <!-- canta text -->
+            <g class="canta-group" transform="translate(110, 20)">
+              <!-- C -->
+              <path class="shimmer-path primary" d="M 40 40 A 15 15 0 1 0 40 70" />
+              <path class="shimmer-path secondary" d="M 25 70 A 15 15 0 0 1 25 40" />
+              <!-- a -->
+              <g transform="translate(65, 0)">
+                <circle class="shimmer-path primary" cx="15" cy="55" r="15" />
+                <path class="shimmer-path secondary" d="M 30 40 L 30 70" />
+              </g>
+              <!-- n -->
+              <g transform="translate(115, 0)">
+                <path class="shimmer-path primary" d="M 10 70 L 10 40" />
+                <path class="shimmer-path secondary" d="M 10 40 Q 25 40 25 55 L 25 70" />
+              </g>
+              <!-- t -->
+              <g transform="translate(160, 0)">
+                <path class="shimmer-path primary" d="M 15 20 L 15 70" />
+                <path class="shimmer-path secondary" d="M 5 40 L 25 40" />
+              </g>
+              <!-- a -->
+              <g transform="translate(205, 0)">
+                <circle class="shimmer-path primary" cx="15" cy="55" r="15" />
+                <path class="shimmer-path secondary" d="M 30 40 L 30 70" />
+              </g>
+            </g>
+            <!-- Decorative floating notes -->
+            <g class="note-decoration" transform="translate(360, 30) rotate(-10)">
+              <path class="secondary" d="M 5 0 L 5 20" />
+              <circle class="note-head" cx="0" cy="20" r="5" />
+            </g>
+            <g class="note-decoration" transform="translate(30, 120) rotate(15)">
+              <path class="primary" d="M 5 0 L 5 15" />
+              <circle class="note-head" cx="0" cy="15" r="4" style="fill: var(--color);" />
+            </g>
+          </svg>
         </div>
         <h1 style="font-size: min(2.2em, 10vw)">y·Can·ta</h1>
         <p style="font-size: min(4vw, 1em); margin-top: 0.5em"><b>/ and sing! /</b></p>

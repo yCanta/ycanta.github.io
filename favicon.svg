@@ -1,0 +1,18 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100">
+  <style>
+    .primary { stroke: #ADD8E6; } /* lightblue */
+    .secondary { stroke: #6495ED; } /* cornflowerblue */
+    .note-head { fill: #6495ED; }
+    path, circle {
+      fill: none;
+      stroke-width: 8;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+    }
+  </style>
+  <g transform="translate(15, 10)">
+    <path class="primary" d="M 10 35 Q 10 65 35 65 Q 60 65 60 35" />
+    <path class="secondary" d="M 60 35 L 60 75 Q 60 90 45 90 Q 30 90 30 80" />
+    <circle class="note-head" cx="30" cy="80" r="10" />
+  </g>
+</svg>
