@@ -88,156 +88,58 @@
   aspect-ratio: 1 / 1;
   font-size: min(calc(var(--linear-change) * 1px), 1.3vw);
 }
-.icon:hover .ltr {
-  transition: border-width 1s;
-  --stroke-width: .15em;
-  --middle-offset: 0em;
-}
-.ltr {
-  --stroke-width: min(var(--parabola), 0.5em);
+.icon {
   --color: lightblue;
   --secondary-color: cornflowerblue;
-  --border-adjust: calc(-1 * var(--stroke-width));
-  --middle-offset: .25em;
-  display: inline-block;
-  width: 1em;
-  height: calc(1em + var(--middle-offset));
-  margin: 1em 0.1em;
-  position: relative;
-  font-size: 3em;
-  @container (max-width: 125px) {
-    --stroke-width: 0;
-    transition: all .5s;
-    width: 0em;
-    margin: 1em 0px;
-    opacity: 0;
-  }
-}
-.y {
-  border: var(--stroke-width) solid var(--color);
-  border-top: none;
-  border-bottom-left-radius: 50%;
-  border-bottom-right-radius: 50%;
-  @container (max-width: 125px) {
-    --stroke-width: .5em;
-    font-size: 7em;
-    margin-bottom: 2em;
-    width: 1em;
-    opacity: 1;
-  }
-}
-.y:after {
-  position: absolute;
-  top: 0em;
-  left: var(--border-adjust);
-  width: 1em;
-  height: calc(2em + var(--middle-offset));
-  content: ' ';
-  border-right: var(--stroke-width) solid var(--secondary-color);
-  border-bottom: var(--stroke-width) solid var(--secondary-color);
-  border-bottom-right-radius: 80% 50%;
-}
-.C::before {
-  border: var(--stroke-width) solid var(--color);
-  border-right: none;
-  position: absolute;
-  top: calc(-1em + var(--middle-offset));
-  left: 0;
-  width: 1em;
-  height: 2em;
-  content: ' ';
-  border-top-left-radius: 70% 45%;
-  border-bottom-left-radius: 70% 45%;
-  border-bottom-color: var(--secondary-color);
-}
-.a {
-  border: var(--stroke-width) solid var(--color);
-  border-radius: 50%;
-}
-.a:after {
-  border-right: var(--stroke-width) solid var(--secondary-color);
-  position: absolute;
-  top: calc(var(--border-adjust) + .5em);
-  left: var(--border-adjust);
-  width: 1em;
-  height: calc(.5em + var(--middle-offset));
-  content: ' ';
-}
-.n {
-  border: var(--stroke-width) solid var(--secondary-color);
-  border-bottom: 0;
-  border-top-right-radius: 50%;
-  border-top-left-radius: 50%;
-}
-.n:before {
-  border-left: var(--stroke-width) solid var(--color);
-  position: absolute;
-  top: calc(var(--border-adjust));
-  left: var(--border-adjust);
-  width: 1em;
-  height: calc(1em + var(--middle-offset));
-  content: ' ';
-}
-.t {
-  margin: 1em 0;
-}
-.t:before {
-  border-left: var(--stroke-width) solid var(--color);
-  position: absolute;
-  top: calc(-1em + var(--middle-offset));
-  left: calc(.5em - var(--stroke-width)/2);
-  width: 1em;
-  height: 2em;
-  content: ' ';
-}
-.t:after {
-  border-top: var(--stroke-width) solid var(--secondary-color);
-  position: absolute;
-  top: calc(var(--border-adjust)/2);
-  width: 1em;
-  height: 1em;
-  content: ' ';
-}
-.icon {
+  --stroke-width: var(--parabola);
   position: relative;
   width: 25em;
   height: 25em;
   border-radius: 5em;
   background: var(--background);
-  display: flex; /* Make the icon a flex container */
-  justify-content: center; /* Center horizontally */
-  align-items: center; /* Center vertically */
+  display: flex;
+  justify-content: center;
+  align-items: center;
   container-type: size;
+  overflow: visible;
 }
-.note {
-  position: absolute;
-  top: -.5em;
-  width: 2em;
-  height: 2em;
-  border: var(--stroke-width) solid var(--color);
-  border-bottom: none;
-  transform: skewY(-10deg) scale(.5);
-  right: 2.5em; 
+.icon svg {
+  width: 90%;
+  height: 90%;
+  overflow: visible;
 }
-.note:before {
-  position: absolute;
-  right: 100%;
-  bottom: -.5em;
-  width: 1em;
-  height: 1em;
-  border: var(--stroke-width) solid var(--secondary-color);
-  border-radius: 100%;
-  content: ' ';
+.icon path, .icon g {
+  transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
 }
-.note:after {
-  position: absolute;
-  left: calc(100% - 1em + var(--stroke-width));
-  bottom: -.5em;
-  width: 1em;
-  height: 1em;
-  border: var(--stroke-width) solid var(--secondary-color);
-  border-radius: 100%;
-  content: ' ';
+.icon path {
+  fill: none;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  stroke-width: var(--stroke-width);
+  vector-effect: non-scaling-stroke;
+}
+.icon:hover path {
+  --stroke-width: 0.15em !important;
+}
+#svg-char-y, #svg-char-C-top, #svg-char-a-body, #svg-char-n-stem, #svg-char-t-stem, #svg-char-a2-body, .svg-note-stem {
+  stroke: var(--color);
+}
+#svg-char-y-tail, #svg-char-C-bottom, #svg-char-a-tail, #svg-char-n-arch, #svg-char-t-cross, #svg-char-a2-tail, .svg-note-head {
+  stroke: var(--secondary-color);
+}
+
+@container (max-width: 125px) {
+  .icon svg g:not(#svg-group-y) {
+    opacity: 0;
+    transform: scale(0);
+    pointer-events: none;
+  }
+  #svg-group-y {
+    transform: scale(6) translate(12px, 12px) !important;
+  }
+  #svg-group-y path {
+    --stroke-width: 0.5em !important;
+  }
 }
 body {
   margin-top: 0;
@@ -310,10 +212,61 @@ header {
         <div id="spacer"></div>
         <!--a href="https://login.yCanta.com" target="_blank" style="float:right; line-height: 2.9rem; margin-right:1rem">Documentation</a-->
         <div class="icon transition" style="float:left; margin-right: 2rem;">
-          <span class="ltr note">
-          </span>
-          <span class="word"><span class="ltr y"></span><span class="ltr C"></span><span class="ltr a"></span><span class="ltr n"></span><span class="ltr t"></span><span class="ltr a"></span></span>
-          <span class="ltr note" style="top:unset; bottom: 0em; right: unset; left: 2em;"></span>
+          <svg viewBox="0 0 240 80" preserveAspectRatio="xMidYMid meet">
+            <!-- Top Note -->
+            <g id="svg-note-top" transform="translate(210, 5) scale(0.8) skewY(-10)">
+              <path class="svg-note-stem" d="M0,5 V25" />
+              <path class="svg-note-head" d="M-4,25 A4,4 0 1,0 0,29 A4,4 0 0,0 -4,25" />
+              <path class="svg-note-stem" d="M12,0 V20" />
+              <path class="svg-note-head" d="M8,20 A4,4 0 1,0 12,24 A4,4 0 0,0 8,20" />
+              <path class="svg-note-stem" d="M0,5 L12,0" />
+            </g>
+
+            <!-- Bottom Note -->
+            <g id="svg-note-bottom" transform="translate(15, 45) scale(0.8) skewY(-10)">
+              <path class="svg-note-stem" d="M0,5 V25" />
+              <path class="svg-note-head" d="M-4,25 A4,4 0 1,0 0,29 A4,4 0 0,0 -4,25" />
+              <path class="svg-note-stem" d="M12,0 V20" />
+              <path class="svg-note-head" d="M8,20 A4,4 0 1,0 12,24 A4,4 0 0,0 8,20" />
+              <path class="svg-note-stem" d="M0,5 L12,0" />
+            </g>
+
+            <!-- y -->
+            <g id="svg-group-y" transform="translate(35, 20)">
+              <path id="svg-char-y" d="M0,0 C0,15 5,20 12,20 C19,20 24,15 24,0" />
+              <path id="svg-char-y-tail" d="M24,0 V28 C24,35 18,40 10,40" />
+            </g>
+
+            <!-- C -->
+            <g id="svg-group-C" transform="translate(70, 20)">
+              <path id="svg-char-C-top" d="M20,5 C18,0 5,0 5,15" />
+              <path id="svg-char-C-bottom" d="M5,15 C5,30 18,30 20,25" />
+            </g>
+
+            <!-- a -->
+            <g id="svg-group-a" transform="translate(100, 25)">
+              <path id="svg-char-a-body" d="M18,15 A9,9 0 1,1 18,14 Z" />
+              <path id="svg-char-a-tail" d="M18,8 V20" />
+            </g>
+
+            <!-- n -->
+            <g id="svg-group-n" transform="translate(130, 25)">
+              <path id="svg-char-n-stem" d="M0,0 V20" />
+              <path id="svg-char-n-arch" d="M0,8 C0,-5 18,-5 18,8 V20" />
+            </g>
+
+            <!-- t -->
+            <g id="svg-group-t" transform="translate(160, 20)">
+              <path id="svg-char-t-stem" d="M8,0 V25 C8,30 12,32 18,30" />
+              <path id="svg-char-t-cross" d="M2,12 H14" />
+            </g>
+
+            <!-- a2 -->
+            <g id="svg-group-a2" transform="translate(190, 25)">
+              <path id="svg-char-a2-body" d="M18,15 A9,9 0 1,1 18,14 Z" />
+              <path id="svg-char-a2-tail" d="M18,8 V20" />
+            </g>
+          </svg>
         </div>
         <h1 style="font-size: min(2.2em, 10vw)">y·Can·ta</h1>
         <p style="font-size: min(4vw, 1em); margin-top: 0.5em"><b>/ and sing! /</b></p>
